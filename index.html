@@ -530,6 +530,63 @@ function playSound(type) {
                 osc.stop(audioCtx.currentTime + 0.5);
                 break;
             }
+            case 'rage': {
+                // Angry rage sound - aggressive distorted tone
+                const osc = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const distortion = audioCtx.createWaveShaper();
+
+                // Create distortion curve
+                const curve = new Float32Array(256);
+                for (let i = 0; i < 256; i++) {
+                    const x = (i - 128) / 128;
+                    curve[i] = Math.tanh(x * 3);
+                }
+                distortion.curve = curve;
+
+                osc.connect(distortion);
+                osc2.connect(distortion);
+                distortion.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'sawtooth';
+                osc2.type = 'square';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                osc2.frequency.setValueAtTime(155, audioCtx.currentTime);
+                osc2.frequency.exponentialRampToValueAtTime(85, audioCtx.currentTime + 0.3);
+
+                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+
+                osc.start(audioCtx.currentTime);
+                osc2.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.35);
+                osc2.stop(audioCtx.currentTime + 0.35);
+                break;
+            }
+            case 'break': {
+                // Putter breaking sound - snap/crack
+                const bufferSize = audioCtx.sampleRate * 0.15;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.03));
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.value = 800;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(audioCtx.currentTime);
+                break;
+            }
             case 'gameover': {
                 const notes = [400, 350, 300, 200];
                 notes.forEach((freq, i) => {
@@ -603,7 +660,11 @@ const murry = {
     fatness: 0, // 0-100, increases with total food eaten
     blinkTimer: 100,
     isBlinking: false,
-    mouthOpen: 0
+    mouthOpen: 0,
+    // RAGE MODE
+    rageTimer: 0,
+    isRaging: false,
+    puttersBroken: 0
 };
 
 const GRAVITY = 0.55;
@@ -614,8 +675,23 @@ const ACCIDENT_TIME = 240; // 4 seconds
 let platforms = [];
 let toilet = {};
 let foodItems = []; // sandwiches, spicy sandwiches, waffle fries
+let putters = []; // Golf putters that trigger RAGE MODE
 
 const keys = {};
+
+// Rage quotes
+const rageQuotes = [
+    "MURRY RAGE!!!",
+    "BREAK IT!!!",
+    "STUPID PUTTER!",
+    "GOLF SUCKS!",
+    "AAAARRRGH!",
+    "I HATE GOLF!",
+    "HULK MURRY!",
+    "RAGE MODE!",
+    "DESTROYED!",
+    "NO MORE GOLF!"
+];
 
 // ============== EFFECTS ==============
 function addFloatingText(x, y, text, color = '#fff', size = 16) {
@@ -675,9 +751,13 @@ function startGame() {
     murry.faceRedness = 0;
     murry.eyeSize = 1;
     murry.sweatDrops = [];
+    murry.rageTimer = 0;
+    murry.isRaging = false;
+    murry.puttersBroken = 0;
 
     floatingTexts = [];
     stinkClouds = [];
+    putters = [];
 
     // Setup platforms
     platforms = [
@@ -720,6 +800,27 @@ function spawnFood() {
             bob: Math.random() * Math.PI * 2
         });
     }
+
+    // Spawn a putter randomly (30% chance per food spawn cycle)
+    if (Math.random() < 0.3 && putters.length < 2) {
+        spawnPutter();
+    }
+}
+
+function spawnPutter() {
+    // Spawn putter floating in a random location
+    const x = 100 + Math.random() * 600;
+    const y = 150 + Math.random() * 200;
+
+    putters.push({
+        x: x,
+        y: y,
+        w: 50,
+        h: 20,
+        bob: Math.random() * Math.PI * 2,
+        rotation: Math.random() * 0.3 - 0.15,
+        broken: false
+    });
 }
 
 // ============== INPUT ==============
@@ -933,10 +1034,20 @@ function update() {
         murry.eyeSize = Math.max(1, murry.eyeSize - 0.025);
     }
 
-    // Movement
+    // === RAGE MODE ===
+    if (murry.isRaging) {
+        murry.rageTimer--;
+        if (murry.rageTimer <= 0) {
+            murry.isRaging = false;
+            addFloatingText(murry.x + 25, murry.y - 50, "RAGE OVER", '#888', 16);
+        }
+    }
+
+    // Movement (RAGE MODE = SUPER FAST!)
     const fatSlowdown = 1 - murry.fatness * 0.003; // Up to 30% slower when super fat
     const bellySlowdown = murry.belly > 80 ? 0.55 : murry.belly > 50 ? 0.75 : 1;
-    const speedMod = fatSlowdown * bellySlowdown;
+    const rageBoost = murry.isRaging ? 2.0 : 1; // DOUBLE SPEED IN RAGE MODE!
+    const speedMod = fatSlowdown * bellySlowdown * rageBoost;
 
     if (keys['ArrowLeft'] || keys['KeyA']) {
         murry.vx = -murry.speed * speedMod;
@@ -951,15 +1062,53 @@ function update() {
         if (murry.onGround && Math.abs(murry.vx) < 0.5) murry.state = 'idle';
     }
 
-    // Jump
+    // Jump (higher in rage mode!)
     if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && murry.onGround) {
         const jumpMod = murry.belly > 70 ? 0.75 : 1;
         const fatJumpMod = 1 - murry.fatness * 0.002;
-        murry.vy = murry.jumpPower * jumpMod * fatJumpMod;
+        const rageJump = murry.isRaging ? 1.3 : 1; // 30% higher jumps in rage!
+        murry.vy = murry.jumpPower * jumpMod * fatJumpMod * rageJump;
         murry.onGround = false;
         murry.state = 'jumping';
         playSound('jump');
-        createParticles(murry.x + 25, murry.y + 70, ['#8B7355', '#a08060'], 7, { spread: 8 });
+        createParticles(murry.x + 25, murry.y + 70, murry.isRaging ? ['#ef4444', '#dc2626'] : ['#8B7355', '#a08060'], 7, { spread: 8 });
+    }
+
+    // === PUTTER COLLISION - TRIGGERS RAGE! ===
+    for (let i = putters.length - 1; i >= 0; i--) {
+        const putter = putters[i];
+        if (!putter.broken &&
+            murry.x < putter.x + putter.w && murry.x + murry.width > putter.x &&
+            murry.y < putter.y + putter.h && murry.y + murry.height > putter.y) {
+
+            // BREAK THE PUTTER!
+            putter.broken = true;
+            murry.puttersBroken++;
+            murry.isRaging = true;
+            murry.rageTimer = 300; // 5 seconds of rage at 60fps
+
+            // RAGE EFFECTS!
+            playSound('break');
+            playSound('rage');
+            screenShake.intensity = 25;
+
+            // Putter pieces flying
+            createParticles(putter.x + 25, putter.y + 10, ['#6b7280', '#9ca3af', '#374151'], 20, { spread: 20, vy: -6, spreadX: 8 });
+            createParticles(putter.x + 25, putter.y + 10, ['#78350f', '#92400e'], 10, { spread: 15, vy: -4 }); // Wood/grip pieces
+
+            // Rage text
+            const quote = rageQuotes[Math.floor(Math.random() * rageQuotes.length)];
+            addFloatingText(murry.x + 25, murry.y - 60, quote, '#ef4444', 24);
+            addFloatingText(putter.x + 25, putter.y - 20, "💢 SNAP! 💢", '#dc2626', 20);
+
+            score += 200;
+            addFloatingText(murry.x + 25, murry.y - 85, "+200 RAGE!", '#fbbf24', 18);
+
+            // Remove broken putter after a moment
+            setTimeout(() => {
+                putters.splice(putters.indexOf(putter), 1);
+            }, 100);
+        }
     }
 
     // Physics
@@ -1110,7 +1259,7 @@ function gameOver(reason) {
 
         title = "💩 ACCIDENT! 💩";
         text = accidentTexts[Math.floor(Math.random() * accidentTexts.length)];
-        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
+        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🏌️ Putters Broken: ${murry.puttersBroken}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
     } else if (reason === 'starved') {
         playSound('gameover');
 
@@ -1124,7 +1273,7 @@ function gameOver(reason) {
 
         title = "😵 STARVED!";
         text = starveTexts[Math.floor(Math.random() * starveTexts.length)];
-        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
+        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🏌️ Putters Broken: ${murry.puttersBroken}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
     } else {
         playSound('gameover');
 
@@ -1138,7 +1287,7 @@ function gameOver(reason) {
 
         title = "💀 FELL OFF!";
         text = fellTexts[Math.floor(Math.random() * fellTexts.length)];
-        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
+        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🏌️ Putters Broken: ${murry.puttersBroken}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
     }
 
     setTimeout(() => {
@@ -1176,14 +1325,32 @@ function updateEffects() {
 
 // ============== DRAWING ==============
 function drawBackground() {
-    // Sky gradient
+    // Sky gradient - TURNS RED IN RAGE MODE!
     const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    grad.addColorStop(0, '#1e3a5f');
-    grad.addColorStop(0.4, '#3b82b4');
-    grad.addColorStop(0.8, '#7ec8e3');
-    grad.addColorStop(1, '#b0d4e8');
+    if (murry.isRaging) {
+        // RAGE RED SKY with pulsing effect
+        const pulse = Math.sin(gameTime * 0.15) * 0.15 + 0.85;
+        grad.addColorStop(0, `rgba(127, 29, 29, ${pulse})`);
+        grad.addColorStop(0.4, `rgba(185, 28, 28, ${pulse})`);
+        grad.addColorStop(0.8, `rgba(220, 38, 38, ${pulse})`);
+        grad.addColorStop(1, `rgba(248, 113, 113, ${pulse})`);
+    } else {
+        grad.addColorStop(0, '#1e3a5f');
+        grad.addColorStop(0.4, '#3b82b4');
+        grad.addColorStop(0.8, '#7ec8e3');
+        grad.addColorStop(1, '#b0d4e8');
+    }
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Rage vignette effect
+    if (murry.isRaging) {
+        const vignette = ctx.createRadialGradient(400, 250, 100, 400, 250, 500);
+        vignette.addColorStop(0, 'rgba(0,0,0,0)');
+        vignette.addColorStop(1, 'rgba(139,0,0,0.4)');
+        ctx.fillStyle = vignette;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     // Sun
     ctx.save();
@@ -1531,6 +1698,64 @@ function drawFood(food) {
     ctx.restore();
 }
 
+function drawPutter(putter) {
+    if (putter.broken) return;
+
+    const bobY = Math.sin(gameTime * 0.05 + putter.bob) * 6;
+    const x = putter.x;
+    const y = putter.y + bobY;
+
+    ctx.save();
+    ctx.translate(x + 25, y + 10);
+    ctx.rotate(putter.rotation + Math.sin(gameTime * 0.03) * 0.1);
+
+    // Glow effect
+    ctx.shadowColor = '#ef4444';
+    ctx.shadowBlur = 15 + Math.sin(gameTime * 0.1) * 5;
+
+    // Putter shaft (metallic gray)
+    ctx.fillStyle = '#9ca3af';
+    ctx.fillRect(-22, -3, 40, 6);
+
+    // Shaft highlight
+    ctx.fillStyle = '#d1d5db';
+    ctx.fillRect(-22, -3, 40, 2);
+
+    // Putter head (darker metal)
+    ctx.fillStyle = '#4b5563';
+    ctx.beginPath();
+    ctx.roundRect(-25, -8, 12, 16, 2);
+    ctx.fill();
+
+    // Head face (hitting surface)
+    ctx.fillStyle = '#374151';
+    ctx.fillRect(-26, -6, 3, 12);
+
+    // Grip (rubber/leather - brown)
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(15, -4, 12, 8);
+
+    // Grip texture lines
+    ctx.strokeStyle = '#451a03';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(17 + i * 3, -4);
+        ctx.lineTo(17 + i * 3, 4);
+        ctx.stroke();
+    }
+
+    ctx.shadowBlur = 0;
+
+    // "RAGE" label floating above
+    ctx.fillStyle = '#ef4444';
+    ctx.font = 'bold 10px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('⚡RAGE⚡', 0, -18);
+
+    ctx.restore();
+}
+
 function drawMurry() {
     const x = murry.x;
     const y = murry.y;
@@ -1804,8 +2029,8 @@ function drawMurry() {
     ctx.lineTo(6, -12);
     ctx.stroke();
 
-    // Hair peeking out from under cap (black/dark brown)
-    ctx.fillStyle = '#1c1917';
+    // Hair peeking out from under cap (dark brown)
+    ctx.fillStyle = '#3d2314';
     ctx.beginPath();
     ctx.ellipse(-12, -6, 5, 4, -0.3, 0, Math.PI * 2);
     ctx.ellipse(12, -6, 5, 4, 0.3, 0, Math.PI * 2);
@@ -1815,7 +2040,7 @@ function drawMurry() {
     ctx.fillRect(11, -4, 3, 6);
 
     // === MOUSTACHE === (Thinner/subtler like real Murry)
-    ctx.fillStyle = '#1c1917'; // Dark/black
+    ctx.fillStyle = '#3d2314'; // Dark brown
     // Simple thin moustache
     ctx.beginPath();
     ctx.moveTo(-8, 4);
@@ -1859,8 +2084,8 @@ function drawMurry() {
         ctx.stroke();
     }
 
-    // Eyebrows (black like real Murry)
-    ctx.strokeStyle = '#1c1917';
+    // Eyebrows (dark brown like real Murry)
+    ctx.strokeStyle = '#3d2314';
     ctx.lineWidth = 2.5;
     if (murry.belly > 80 || murry.state === 'pooping') {
         ctx.beginPath();
@@ -2038,9 +2263,17 @@ function draw() {
     drawPlatforms();
     drawToilet();
     foodItems.forEach(f => drawFood(f));
+    putters.forEach(p => drawPutter(p)); // Draw golf putters
     drawStinkClouds();
     drawMurry();
     drawFloatingTexts();
+
+    // Rage mode border flash
+    if (murry.isRaging) {
+        ctx.strokeStyle = `rgba(239, 68, 68, ${0.5 + Math.sin(gameTime * 0.2) * 0.3})`;
+        ctx.lineWidth = 8;
+        ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
+    }
 
     ctx.restore();
 }
@@ -2056,7 +2289,7 @@ setupMobileControls();
 document.getElementById('highScoreDisplay').textContent = highScore;
 showOverlay('🐔 MURRY FUEL 🐔',
     '"My pleasure... to eat ALL of it"',
-    'Murry is ADDICTED to Chick-fil-A.<br><br>🍗 Eat sandwiches & waffle fries<br>🔥 Spicy ones fill you up faster!<br>🚽 Get to the toilet before you EXPLODE<br>💀 Hold it too long = ACCIDENT!<br><br>How long can Murry last?',
+    'Murry is ADDICTED to Chick-fil-A.<br><br>🍗 Eat sandwiches & waffle fries<br>🔥 Spicy ones fill you up faster!<br>🏌️ Break putters = MURRY RAGE!<br>🚽 Get to the toilet before you EXPLODE<br>💀 Hold it too long = ACCIDENT!<br><br>How long can Murry last?',
     'EAT! MY PLEASURE!', true);
 gameLoop();
 </script>
