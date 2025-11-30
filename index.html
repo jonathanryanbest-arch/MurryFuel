@@ -2,10 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Murry Fuel - Chicken Sandwich Chase!</title>
+    <meta name="theme-color" content="#e51636">
+    <!-- Social sharing meta tags for Snapchat/iMessage/etc -->
+    <meta property="og:title" content="MURRY FUEL - A Chick-fil-A Addiction Story">
+    <meta property="og:description" content="Help Murry eat Chick-fil-A without having an accident! A hilarious mobile game.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MURRY FUEL">
+    <meta name="twitter:description" content="Help Murry eat Chick-fil-A without pooping himself!">
+    <title>MURRY FUEL - A Chick-fil-A Addiction Story</title>
+    <!-- Prevent phone number detection -->
+    <meta name="format-detection" content="telephone=no">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
@@ -34,57 +45,61 @@
             padding: 5px;
         }
         h1 {
-            color: #ff6b35;
+            color: #e51636;
             font-size: clamp(1.2em, 5vw, 2.2em);
             margin-bottom: 3px;
-            text-shadow: 2px 2px 0px #ffc300;
+            text-shadow: 2px 2px 0px #ffffff;
         }
         .subtitle {
-            color: #ffc300;
-            font-size: clamp(0.7em, 2.5vw, 0.9em);
+            color: #ffffff;
+            font-size: clamp(0.65em, 2.5vw, 0.85em);
             margin-bottom: 5px;
+            font-style: italic;
         }
         #hud {
             display: flex;
             justify-content: space-around;
-            padding: 6px 10px;
-            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+            background: linear-gradient(180deg, #e51636 0%, #c41230 100%);
             border-radius: 8px;
             margin-bottom: 5px;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 8px;
+            border: 2px solid #ffffff;
         }
         .hud-item {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
         .hud-label {
-            color: #aaa;
-            font-size: clamp(0.6em, 2vw, 0.8em);
-        }
-        .hud-value {
-            color: #ffc300;
-            font-size: clamp(0.8em, 2.5vw, 1em);
+            color: #ffffff;
+            font-size: clamp(0.65em, 2vw, 0.8em);
             font-weight: bold;
         }
+        .hud-value {
+            color: #ffffff;
+            font-size: clamp(0.9em, 2.5vw, 1.1em);
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
         .meter-container {
-            width: clamp(60px, 15vw, 100px);
-            height: 14px;
-            background: #333;
-            border-radius: 7px;
+            width: clamp(70px, 18vw, 110px);
+            height: 16px;
+            background: #8b0000;
+            border-radius: 8px;
             overflow: hidden;
-            border: 2px solid #555;
+            border: 2px solid #ffffff;
         }
         #hungerMeter {
             height: 100%;
-            background: linear-gradient(90deg, #ff4444, #ff8844);
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d);
             width: 100%;
             transition: width 0.3s;
         }
         #bellyMeter {
             height: 100%;
-            background: linear-gradient(90deg, #44aa44, #ffcc00, #ff0000);
+            background: linear-gradient(90deg, #4ade80, #fbbf24, #ef4444);
             width: 0%;
             transition: width 0.3s;
         }
@@ -95,9 +110,9 @@
             margin: 0 auto;
         }
         canvas {
-            border: 3px solid #ff6b35;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+            border: 4px solid #e51636;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(229, 22, 54, 0.4);
             display: block;
             width: 100%;
             height: auto;
@@ -105,7 +120,7 @@
         }
         #instructions {
             color: #aaa;
-            margin-top: 5px;
+            margin-top: 8px;
             font-size: clamp(0.6em, 2vw, 0.85em);
             padding: 0 10px;
         }
@@ -114,47 +129,57 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.92);
-            padding: clamp(15px, 4vw, 35px);
-            border-radius: 15px;
-            border: 3px solid #ff6b35;
+            background: linear-gradient(180deg, #e51636 0%, #a01128 100%);
+            padding: clamp(20px, 4vw, 40px);
+            border-radius: 20px;
+            border: 4px solid #ffffff;
             z-index: 100;
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
         #overlay h2 {
-            color: #ff6b35;
-            font-size: clamp(1.3em, 5vw, 1.8em);
-            margin-bottom: 10px;
+            color: #ffffff;
+            font-size: clamp(1.4em, 5vw, 2em);
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         #overlay p {
-            color: #ffc300;
-            font-size: clamp(0.85em, 3vw, 1em);
-            margin-bottom: 8px;
+            color: #ffffff;
+            font-size: clamp(0.9em, 3vw, 1.1em);
+            margin-bottom: 10px;
         }
         #overlay .info {
-            color: #aaa;
+            color: rgba(255,255,255,0.9);
             font-size: clamp(0.75em, 2.5vw, 0.9em);
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+        #overlay .highscore {
+            color: #ffd93d;
+            font-size: clamp(1em, 3vw, 1.2em);
+            font-weight: bold;
             margin: 10px 0;
-            line-height: 1.4;
         }
         #overlay button {
-            background: #ff6b35;
-            color: white;
+            background: #ffffff;
+            color: #e51636;
             border: none;
-            padding: clamp(10px, 3vw, 15px) clamp(25px, 8vw, 40px);
-            font-size: clamp(1em, 3.5vw, 1.2em);
-            border-radius: 10px;
+            padding: clamp(12px, 3vw, 18px) clamp(30px, 8vw, 50px);
+            font-size: clamp(1.1em, 3.5vw, 1.3em);
+            font-weight: bold;
+            border-radius: 30px;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 10px;
             -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
         }
         #overlay button:hover, #overlay button:active {
-            background: #ff8855;
+            transform: scale(1.05);
         }
         .hidden { display: none !important; }
 
-        /* Mobile Controls */
         #mobileControls {
             display: none;
             position: fixed;
@@ -162,7 +187,9 @@
             left: 0;
             right: 0;
             padding: 10px;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
             z-index: 50;
+            background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%);
         }
         .control-row {
             display: flex;
@@ -170,119 +197,139 @@
             align-items: center;
             max-width: 500px;
             margin: 0 auto;
+            padding: 0 10px;
         }
         .dpad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
-            width: 130px;
+            display: flex;
+            gap: 12px;
         }
         .dpad-btn {
-            width: 42px;
-            height: 42px;
-            background: rgba(255, 107, 53, 0.7);
-            border: 2px solid #ff6b35;
-            border-radius: 8px;
+            width: 70px;
+            height: 70px;
+            background: rgba(229, 22, 54, 0.85);
+            border: 3px solid #ffffff;
+            border-radius: 15px;
             color: white;
-            font-size: 20px;
+            font-size: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.08s, background 0.08s;
         }
         .dpad-btn:active, .dpad-btn.active {
-            background: #ff6b35;
-            transform: scale(0.95);
-        }
-        .dpad-btn.empty {
-            visibility: hidden;
+            background: #e51636;
+            transform: scale(0.92);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
         #jumpBtn {
             width: 90px;
             height: 90px;
-            background: rgba(255, 199, 0, 0.7);
-            border: 3px solid #ffc300;
+            background: rgba(229, 22, 54, 0.85);
+            border: 3px solid #ffffff;
             border-radius: 50%;
             color: white;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
             display: flex;
             justify-content: center;
             align-items: center;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+            transition: transform 0.08s, background 0.08s;
         }
         #jumpBtn:active, #jumpBtn.active {
-            background: #ffc300;
-            transform: scale(0.95);
+            background: #e51636;
+            transform: scale(0.92);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
+        /* Mobile detection and layout */
         @media (hover: none) and (pointer: coarse) {
             #mobileControls { display: block; }
             #instructions { display: none; }
-            #gameContainer { padding-bottom: 130px; }
+            #gameContainer {
+                padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+            }
+            body {
+                padding-top: env(safe-area-inset-top, 0px);
+            }
         }
 
+        /* Small phones */
+        @media (max-width: 380px) {
+            .dpad-btn { width: 55px; height: 55px; font-size: 22px; }
+            #jumpBtn { width: 70px; height: 70px; font-size: 13px; }
+            .dpad { gap: 8px; }
+        }
+
+        /* Landscape mode */
         @media (max-height: 500px) and (orientation: landscape) {
-            h1 { font-size: 1.2em; margin-bottom: 2px; }
+            h1 { font-size: 1.1em; margin-bottom: 2px; }
             .subtitle { display: none; }
-            #hud { padding: 4px 8px; gap: 3px; }
-            .meter-container { width: 50px; height: 12px; }
-            #mobileControls { padding: 5px; }
-            .dpad-btn { width: 36px; height: 36px; font-size: 16px; }
+            #hud { padding: 4px 8px; gap: 4px; }
+            .meter-container { width: 55px; height: 12px; }
+            #mobileControls {
+                padding: 5px;
+                padding-bottom: calc(5px + env(safe-area-inset-bottom, 0px));
+            }
+            .dpad-btn { width: 50px; height: 50px; font-size: 20px; }
             #jumpBtn { width: 70px; height: 70px; font-size: 12px; }
-            #gameContainer { padding-bottom: 100px; }
+            #gameContainer {
+                padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+            }
+        }
+
+        /* Prevent text selection and callouts */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
         }
     </style>
 </head>
 <body>
     <div id="gameContainer">
-        <h1>🍗 MURRY FUEL 🍗</h1>
-        <div class="subtitle">The Chicken Sandwich Chase!</div>
+        <h1>🐔 MURRY FUEL 🐔</h1>
+        <div class="subtitle">"My pleasure... to eat ALL of it"</div>
         <div id="hud">
             <div class="hud-item">
-                <span class="hud-label">🍗</span>
+                <span class="hud-label">SCORE</span>
                 <span class="hud-value" id="scoreDisplay">0</span>
             </div>
             <div class="hud-item">
-                <span class="hud-label">😋</span>
+                <span class="hud-label">🍗 HUNGER</span>
                 <div class="meter-container"><div id="hungerMeter"></div></div>
             </div>
             <div class="hud-item">
-                <span class="hud-label">🤰</span>
+                <span class="hud-label">💀 BELLY</span>
                 <div class="meter-container"><div id="bellyMeter"></div></div>
             </div>
             <div class="hud-item">
-                <span class="hud-label">🚽</span>
-                <span class="hud-value" id="poopDisplay">0/2</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">⭐</span>
-                <span class="hud-value" id="levelDisplay">1</span>
+                <span class="hud-label">🏆 BEST</span>
+                <span class="hud-value" id="highScoreDisplay">0</span>
             </div>
         </div>
         <div id="canvasWrapper">
             <canvas id="game" width="800" height="500"></canvas>
         </div>
-        <div id="instructions">⬅️➡️ Arrow Keys | SPACE Jump | Eat 🍗 → Get full → 🚽 → Repeat!</div>
+        <div id="instructions">⬅️➡️ Move | SPACE Jump | Eat Chick-fil-A → Don't poop yourself!</div>
 
         <div id="overlay">
-            <h2 id="overlayTitle">🍗 MURRY FUEL 🍗</h2>
-            <p id="overlayText">Help Murry chase chicken sandwiches!</p>
-            <div class="info" id="overlayInfo">Eat sandwiches → Get full → Find toilet → Repeat!</div>
-            <button id="overlayBtn">START GAME</button>
+            <h2 id="overlayTitle">🐔 MURRY FUEL 🐔</h2>
+            <p id="overlayText">A Chick-fil-A Addiction Story</p>
+            <div class="info" id="overlayInfo">Murry can't stop eating Chick-fil-A...<br>Help him eat as much as possible without having an "accident"!</div>
+            <div class="highscore" id="overlayHighscore"></div>
+            <button id="overlayBtn">EAT MY PLEASURE</button>
         </div>
     </div>
 
     <div id="mobileControls">
         <div class="control-row">
             <div class="dpad">
-                <div class="dpad-btn empty"></div>
-                <div class="dpad-btn" id="upBtn">⬆️</div>
-                <div class="dpad-btn empty"></div>
                 <div class="dpad-btn" id="leftBtn">⬅️</div>
-                <div class="dpad-btn empty"></div>
                 <div class="dpad-btn" id="rightBtn">➡️</div>
             </div>
             <div id="jumpBtn">JUMP</div>
@@ -296,70 +343,62 @@ const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlayTitle');
 const overlayText = document.getElementById('overlayText');
 const overlayInfo = document.getElementById('overlayInfo');
+const overlayHighscore = document.getElementById('overlayHighscore');
 const overlayBtn = document.getElementById('overlayBtn');
 
-// ============== AUDIO SYSTEM ==============
+// ============== AUDIO ==============
 let audioCtx = null;
-
 function initAudio() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 }
 
 function playSound(type) {
     if (!audioCtx) return;
-
     try {
         switch(type) {
             case 'eat': {
-                // Chomping sound
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
                 osc.start(audioCtx.currentTime);
-                osc.stop(audioCtx.currentTime + 0.15);
+                osc.stop(audioCtx.currentTime + 0.1);
                 break;
             }
             case 'burp': {
-                // Deep burp
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(80, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.2);
-                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
-                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.frequency.setValueAtTime(90, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.45);
                 osc.start(audioCtx.currentTime);
-                osc.stop(audioCtx.currentTime + 0.5);
+                osc.stop(audioCtx.currentTime + 0.45);
                 break;
             }
             case 'fart': {
-                // Fart sound - noise burst
-                const bufferSize = audioCtx.sampleRate * 0.5;
+                const bufferSize = audioCtx.sampleRate * 0.4;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
                 for (let i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.15));
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.12));
                 }
                 const noise = audioCtx.createBufferSource();
                 noise.buffer = buffer;
                 const filter = audioCtx.createBiquadFilter();
                 filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(200, audioCtx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.4);
+                filter.frequency.setValueAtTime(180, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.35);
                 const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
                 noise.connect(filter);
                 filter.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -367,23 +406,22 @@ function playSound(type) {
                 break;
             }
             case 'bigfart': {
-                // Big relief fart
-                const bufferSize = audioCtx.sampleRate * 1.2;
+                const bufferSize = audioCtx.sampleRate * 1.5;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
                 for (let i = 0; i < bufferSize; i++) {
-                    const env = Math.exp(-i / (bufferSize * 0.3));
-                    const wobble = Math.sin(i / 500) * 0.5 + 0.5;
+                    const env = Math.exp(-i / (bufferSize * 0.35));
+                    const wobble = Math.sin(i / 400) * 0.5 + 0.5;
                     data[i] = (Math.random() * 2 - 1) * env * wobble;
                 }
                 const noise = audioCtx.createBufferSource();
                 noise.buffer = buffer;
                 const filter = audioCtx.createBiquadFilter();
                 filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(300, audioCtx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 1);
+                filter.frequency.setValueAtTime(280, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 1.2);
                 const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
                 noise.connect(filter);
                 filter.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -391,8 +429,7 @@ function playSound(type) {
                 break;
             }
             case 'flush': {
-                // Toilet flush - whooshing water
-                const bufferSize = audioCtx.sampleRate * 2;
+                const bufferSize = audioCtx.sampleRate * 2.5;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
                 for (let i = 0; i < bufferSize; i++) {
@@ -404,11 +441,11 @@ function playSound(type) {
                 noise.buffer = buffer;
                 const filter = audioCtx.createBiquadFilter();
                 filter.type = 'bandpass';
-                filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 2);
+                filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 2);
                 filter.Q.value = 1;
                 const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
                 noise.connect(filter);
                 filter.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -416,56 +453,52 @@ function playSound(type) {
                 break;
             }
             case 'relief': {
-                // Ahhhh sigh of relief
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.3);
-                osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.8);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.3);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+                osc.frequency.setValueAtTime(380, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(280, audioCtx.currentTime + 0.4);
+                osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 1);
+                gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.1);
                 osc.start(audioCtx.currentTime);
-                osc.stop(audioCtx.currentTime + 1);
+                osc.stop(audioCtx.currentTime + 1.1);
                 break;
             }
             case 'accident': {
-                // Oh no sound + wet splat
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+                osc.frequency.setValueAtTime(280, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.6);
                 gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
                 osc.start(audioCtx.currentTime);
-                osc.stop(audioCtx.currentTime + 0.5);
+                osc.stop(audioCtx.currentTime + 0.6);
 
-                // Wet splat
                 setTimeout(() => {
-                    const bufferSize = audioCtx.sampleRate * 0.3;
+                    const bufferSize = audioCtx.sampleRate * 0.4;
                     const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                     const data = buffer.getChannelData(0);
                     for (let i = 0; i < bufferSize; i++) {
-                        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.1));
+                        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.08));
                     }
                     const noise = audioCtx.createBufferSource();
                     noise.buffer = buffer;
                     const filter = audioCtx.createBiquadFilter();
                     filter.type = 'lowpass';
-                    filter.frequency.value = 400;
+                    filter.frequency.value = 350;
                     const g = audioCtx.createGain();
-                    g.gain.value = 0.5;
+                    g.gain.value = 0.45;
                     noise.connect(filter);
                     filter.connect(g);
                     g.connect(audioCtx.destination);
                     noise.start();
-                }, 200);
+                }, 250);
                 break;
             }
             case 'jump': {
@@ -473,74 +506,73 @@ function playSound(type) {
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
                 osc.start(audioCtx.currentTime);
-                osc.stop(audioCtx.currentTime + 0.15);
+                osc.stop(audioCtx.currentTime + 0.12);
                 break;
             }
-            case 'gasboost': {
-                // Propulsion fart
-                const bufferSize = audioCtx.sampleRate * 0.3;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * (1 - i/bufferSize);
-                }
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 300;
+            case 'rumble': {
+                // Stomach rumble sound
+                const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                gain.gain.value = 0.4;
-                noise.connect(filter);
-                filter.connect(gain);
+                osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                noise.start();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(45, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(60, audioCtx.currentTime + 0.2);
+                osc.frequency.setValueAtTime(35, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.5);
                 break;
             }
-            case 'powerup': {
-                const notes = [523, 659, 784];
+            case 'gameover': {
+                const notes = [400, 350, 300, 200];
                 notes.forEach((freq, i) => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
+                    osc.type = 'square';
                     osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.2);
-                    osc.start(audioCtx.currentTime + i * 0.1);
-                    osc.stop(audioCtx.currentTime + i * 0.1 + 0.2);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.2);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.2 + 0.25);
+                    osc.start(audioCtx.currentTime + i * 0.2);
+                    osc.stop(audioCtx.currentTime + i * 0.2 + 0.25);
                 });
                 break;
             }
         }
-    } catch(e) {
-        console.log('Audio error:', e);
-    }
+    } catch(e) {}
 }
 
 // ============== GAME STATE ==============
 let gameState = 'menu';
 let score = 0;
-let level = 1;
-let poopsCompleted = 0;
-let requiredPoops = 2;
+let highScore = parseInt(localStorage.getItem('murryFuelHighScore')) || 0;
+let gameTime = 0;
+let difficulty = 1; // Increases over time
 let screenShake = { x: 0, y: 0, intensity: 0 };
 let floatingTexts = [];
 let stinkClouds = [];
-let gameTime = 0;
 
-// Murry quotes
+// Murry's lifetime stats (for this run)
+let totalItemsEaten = 0;
+let totalPoops = 0;
+
+// Quotes
 const quotes = {
-    eat: ["DELICIOUS!", "OH YEAH!", "NOM NOM!", "SO GOOD!", "CRISPY!", "WORTH IT!", "*CHOMP*", "YUMMY!"],
-    full: ["OH NO...", "UH OH!", "GOTTA GO!", "PRAIRIE DOGGING!", "CODE BROWN!", "EMERGENCY!", "CLENCH!!", "HOLD IT!"],
-    relief: ["AHHHHH!", "SWEET RELIEF!", "MUCH BETTER!", "THAT'S THE STUFF!", "GLORIOUS!", "FINALLY!", "YEEEESSS!"],
-    accident: ["OOPS!", "NOT AGAIN!", "MY SHORTS!", "SHAME...", "OH DEAR!", "WHOOPSIE!"],
-    hungry: ["NEED... FOOD...", "SO HUNGRY!", "FEED ME!", "STARVING!"]
+    eat: ["MY PLEASURE!", "DELICIOUS!", "OH YEAH!", "NOM NOM!", "CRISPY!", "WORTH IT!", "SO GOOD!", "MORE!", "YUMMY!", "CHICK-FIL-AAAA!", "CLOSED SUNDAYS!", "EAT MOR CHIKIN!", "LIFE GOALS!", "I LOVE CFA!"],
+    eatSpicy: ["SPICY!!", "🔥🔥🔥", "HOT HOT HOT!", "MY MOUTH!", "WORTH IT!", "SPICY DELUXE!", "FEELS GOOD!", "REGRET INCOMING!", "MY BOOTY LATER..."],
+    eatFries: ["WAFFLE FRIES!", "CRISPY!", "SALTY!", "PERFECT!", "MMM FRIES!", "PERFECTION!", "NEED SAUCE!"],
+    full: ["OH NO...", "UH OH!", "GOTTA GO!", "PRAIRIE DOGGING!", "CODE BROWN!", "EMERGENCY!", "CLENCH!!", "HOLD IT IN!", "NOT HERE!", "BATHROOM NOW!", "ITS COMING!", "TURTLE HEAD!", "DANGER ZONE!"],
+    relief: ["AHHHHH!", "SWEET RELIEF!", "MUCH BETTER!", "GLORIOUS!", "FINALLY!", "YEEEESSS!", "THANK GOD!", "THAT WAS CLOSE!", "ROOM FOR MORE!", "BACK IN BUSINESS!"],
+    accident: ["OOPS!", "NOT AGAIN!", "MY KHAKIS!", "SHAME...", "OH NO!", "WHOOPSIE!", "I REGRET NOTHING!", "WORTH IT THO...", "STILL WORTH IT!", "MY SHORTS!!!"],
+    hungry: ["NEED... CFA...", "SO HUNGRY!", "FEED ME!", "STARVING!", "CHICK-FIL-A PLEASE!", "WHERE'S THE CFA?!", "NEED CHICKEN!", "WITHDRAWALS!"]
 };
 
 function getRandomQuote(type) {
@@ -548,12 +580,12 @@ function getRandomQuote(type) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Murry character
+// Murry
 const murry = {
-    x: 100, y: 350,
-    width: 45, height: 65,
+    x: 380, y: 350,
+    width: 50, height: 70,
     vx: 0, vy: 0,
-    speed: 5,
+    speed: 5.5,
     jumpPower: -14,
     onGround: false,
     facing: 1,
@@ -565,214 +597,129 @@ const murry = {
     accidentTimer: 0,
     danceTimer: 0,
     sweatDrops: [],
-    gasCooldown: 0,
     eyeSize: 1,
     faceRedness: 0,
-    hasAccident: false,
-    // Power-ups
-    tumsActive: 0,
-    laxativeActive: 0,
-    // New detailed properties
-    breathOffset: 0,
-    blinkTimer: 0,
+    // Murry gets FATTER over the game
+    fatness: 0, // 0-100, increases with total food eaten
+    blinkTimer: 100,
     isBlinking: false,
     mouthOpen: 0
 };
 
 const GRAVITY = 0.55;
 const FRICTION = 0.85;
-const ACCIDENT_THRESHOLD = 100; // Belly level that triggers accident countdown
-const ACCIDENT_TIME = 300; // Frames until accident (5 seconds at 60fps)
+const ACCIDENT_TIME = 240; // 4 seconds
 
-// Platforms, objects
+// World
 let platforms = [];
 let toilet = {};
-let sandwiches = [];
-let particles = [];
-let powerups = [];
+let foodItems = []; // sandwiches, spicy sandwiches, waffle fries
 
 const keys = {};
 
-// Level data
-const levels = [
-    {
-        name: "The First Rumble",
-        platforms: [
-            {x: 0, y: 460, w: 800, h: 40, type: 'grass'},
-            {x: 100, y: 380, w: 120, h: 18, type: 'wood'},
-            {x: 300, y: 320, w: 120, h: 18, type: 'wood'},
-            {x: 520, y: 380, w: 120, h: 18, type: 'wood'},
-            {x: 200, y: 240, w: 100, h: 18, type: 'wood'},
-            {x: 450, y: 200, w: 100, h: 18, type: 'wood'},
-        ],
-        toilet: {x: 700, y: 395, w: 55, h: 65},
-        sandwiches: 5,
-        poops: 2,
-        hungerDecay: 0.025,
-        powerups: ['tums']
-    },
-    {
-        name: "Grumble in the Jungle",
-        platforms: [
-            {x: 0, y: 460, w: 800, h: 40, type: 'grass'},
-            {x: 50, y: 385, w: 100, h: 18, type: 'wood'},
-            {x: 200, y: 320, w: 100, h: 18, type: 'wood'},
-            {x: 350, y: 255, w: 100, h: 18, type: 'wood'},
-            {x: 500, y: 320, w: 100, h: 18, type: 'wood'},
-            {x: 650, y: 385, w: 100, h: 18, type: 'wood'},
-            {x: 300, y: 175, w: 120, h: 18, type: 'wood'},
-        ],
-        toilet: {x: 50, y: 395, w: 55, h: 65},
-        sandwiches: 7,
-        poops: 3,
-        hungerDecay: 0.035,
-        powerups: ['tums', 'laxative']
-    },
-    {
-        name: "Code Brown Canyon",
-        platforms: [
-            {x: 0, y: 460, w: 200, h: 40, type: 'grass'},
-            {x: 280, y: 460, w: 200, h: 40, type: 'grass'},
-            {x: 560, y: 460, w: 240, h: 40, type: 'grass'},
-            {x: 80, y: 380, w: 80, h: 18, type: 'wood'},
-            {x: 220, y: 320, w: 80, h: 18, type: 'wood'},
-            {x: 380, y: 260, w: 80, h: 18, type: 'wood'},
-            {x: 540, y: 320, w: 80, h: 18, type: 'wood'},
-            {x: 680, y: 380, w: 80, h: 18, type: 'wood'},
-            {x: 150, y: 200, w: 100, h: 18, type: 'wood'},
-            {x: 550, y: 180, w: 100, h: 18, type: 'wood'},
-        ],
-        toilet: {x: 370, y: 395, w: 55, h: 65},
-        sandwiches: 10,
-        poops: 4,
-        hungerDecay: 0.04,
-        powerups: ['tums', 'laxative', 'gasboost']
-    }
-];
-
-let currentLevel = null;
-
-// ============== FLOATING TEXT ==============
+// ============== EFFECTS ==============
 function addFloatingText(x, y, text, color = '#fff', size = 16) {
-    floatingTexts.push({
-        x, y, text, color, size,
-        vy: -2,
-        life: 1,
-        decay: 0.015
-    });
+    floatingTexts.push({ x, y, text, color, size, vy: -2.5, life: 1, decay: 0.018 });
 }
 
-// ============== STINK CLOUDS ==============
 function addStinkCloud(x, y, big = false) {
-    const count = big ? 5 : 3;
+    const count = big ? 6 : 3;
     for (let i = 0; i < count; i++) {
         stinkClouds.push({
-            x: x + (Math.random() - 0.5) * 20,
-            y: y + (Math.random() - 0.5) * 10,
-            size: big ? 15 + Math.random() * 20 : 8 + Math.random() * 12,
-            vx: (Math.random() - 0.5) * 2,
-            vy: -0.5 - Math.random() * 1,
+            x: x + (Math.random() - 0.5) * 25,
+            y: y + (Math.random() - 0.5) * 12,
+            size: big ? 18 + Math.random() * 22 : 10 + Math.random() * 14,
+            vx: (Math.random() - 0.5) * 2.5,
+            vy: -0.6 - Math.random() * 1.2,
             life: 1,
-            decay: 0.008,
+            decay: 0.007,
             rotation: Math.random() * Math.PI * 2
         });
     }
 }
 
-// ============== PARTICLES ==============
-function createParticles(x, y, color, count, options = {}) {
+function createParticles(x, y, colors, count, options = {}) {
     for (let i = 0; i < count; i++) {
-        particles.push({
-            x, y,
-            vx: (options.vx || 0) + (Math.random() - 0.5) * (options.spread || 8),
-            vy: (options.vy || 0) + (Math.random() - 0.5) * (options.spread || 8) - (options.lift || 3),
+        floatingTexts.push({
+            x: x + (Math.random() - 0.5) * (options.spread || 10),
+            y: y + (Math.random() - 0.5) * (options.spread || 10),
+            text: '',
+            color: Array.isArray(colors) ? colors[Math.floor(Math.random() * colors.length)] : colors,
+            size: (options.size || 4) + Math.random() * 4,
+            vy: (options.vy || -3) + (Math.random() - 0.5) * 3,
+            vx: (Math.random() - 0.5) * (options.spreadX || 4),
             life: 1,
-            color: Array.isArray(color) ? color[Math.floor(Math.random() * color.length)] : color,
-            size: (options.size || 3) + Math.random() * (options.sizeVar || 4),
-            gravity: options.gravity !== undefined ? options.gravity : 0.2,
-            type: options.type || 'circle'
+            decay: 0.025,
+            isParticle: true
         });
     }
 }
 
-// ============== LEVEL MANAGEMENT ==============
-function loadLevel(num) {
-    level = num;
-    if (num > levels.length) {
-        showOverlay('🎉 CHAMPION! 🎉', 'Murry conquered all the sandwiches!',
-            `Final Score: ${score}\nTotal bathroom breaks survived!`, 'PLAY AGAIN');
-        gameState = 'gameover';
-        level = 1;
-        return;
-    }
+// ============== GAME SETUP ==============
+function startGame() {
+    score = 0;
+    gameTime = 0;
+    difficulty = 1;
+    totalItemsEaten = 0;
+    totalPoops = 0;
 
-    currentLevel = levels[num - 1];
-    platforms = currentLevel.platforms.map(p => ({...p}));
-    toilet = {...currentLevel.toilet};
-    requiredPoops = currentLevel.poops;
-    poopsCompleted = 0;
-
-    // Reset Murry
-    murry.x = 100;
+    murry.x = 380;
     murry.y = 350;
     murry.vx = 0;
     murry.vy = 0;
     murry.belly = 0;
     murry.hunger = 100;
     murry.state = 'idle';
+    murry.fatness = 0;
     murry.accidentTimer = 0;
-    murry.hasAccident = false;
-    murry.tumsActive = 0;
-    murry.laxativeActive = 0;
     murry.faceRedness = 0;
     murry.eyeSize = 1;
+    murry.sweatDrops = [];
 
-    // Clear effects
     floatingTexts = [];
     stinkClouds = [];
-    particles = [];
 
-    spawnSandwiches();
-    spawnPowerups();
+    // Setup platforms
+    platforms = [
+        { x: 0, y: 460, w: 800, h: 40, type: 'grass' },
+        { x: 80, y: 370, w: 130, h: 18, type: 'wood' },
+        { x: 320, y: 320, w: 160, h: 18, type: 'wood' },
+        { x: 580, y: 370, w: 130, h: 18, type: 'wood' },
+        { x: 180, y: 240, w: 120, h: 18, type: 'wood' },
+        { x: 480, y: 220, w: 120, h: 18, type: 'wood' },
+    ];
+
+    toilet = { x: 700, y: 392, w: 60, h: 68 };
+
+    spawnFood();
     updateHUD();
-
-    addFloatingText(400, 200, currentLevel.name, '#ffc300', 24);
 }
 
-function spawnSandwiches() {
-    sandwiches = [];
-    const validPlatforms = platforms.filter(p => p.w >= 80);
-    for (let i = 0; i < currentLevel.sandwiches; i++) {
+function spawnFood() {
+    foodItems = [];
+    const validPlatforms = platforms.filter(p => p.w >= 100);
+
+    // Number of items scales with difficulty
+    const itemCount = Math.min(4 + Math.floor(difficulty / 2), 8);
+
+    for (let i = 0; i < itemCount; i++) {
         const plat = validPlatforms[Math.floor(Math.random() * validPlatforms.length)];
-        sandwiches.push({
+        const rand = Math.random();
+        let type;
+        if (rand < 0.5) type = 'sandwich';
+        else if (rand < 0.75) type = 'spicy';
+        else type = 'fries';
+
+        foodItems.push({
             x: plat.x + 15 + Math.random() * (plat.w - 50),
             y: plat.y - 32,
-            w: 38, h: 30,
+            w: type === 'fries' ? 30 : 40,
+            h: type === 'fries' ? 35 : 32,
+            type: type,
             collected: false,
-            bob: Math.random() * Math.PI * 2,
-            rotation: (Math.random() - 0.5) * 0.2
+            bob: Math.random() * Math.PI * 2
         });
     }
-}
-
-function spawnPowerups() {
-    powerups = [];
-    if (!currentLevel.powerups) return;
-
-    const validPlatforms = platforms.filter(p => p.w >= 80 && p.type === 'wood');
-    currentLevel.powerups.forEach((type, i) => {
-        if (validPlatforms.length > i) {
-            const plat = validPlatforms[i];
-            powerups.push({
-                x: plat.x + plat.w/2 - 15,
-                y: plat.y - 35,
-                w: 30, h: 30,
-                type,
-                collected: false,
-                bob: Math.random() * Math.PI * 2
-            });
-        }
-    });
 }
 
 // ============== INPUT ==============
@@ -786,7 +733,6 @@ document.addEventListener('keyup', e => { keys[e.code] = false; });
 function setupMobileControls() {
     const leftBtn = document.getElementById('leftBtn');
     const rightBtn = document.getElementById('rightBtn');
-    const upBtn = document.getElementById('upBtn');
     const jumpBtn = document.getElementById('jumpBtn');
 
     function addTouchEvents(element, keyCode) {
@@ -796,13 +742,11 @@ function setupMobileControls() {
             element.classList.add('active');
             initAudio();
         }, { passive: false });
-
         element.addEventListener('touchend', (e) => {
             e.preventDefault();
             keys[keyCode] = false;
             element.classList.remove('active');
         }, { passive: false });
-
         element.addEventListener('touchcancel', () => {
             keys[keyCode] = false;
             element.classList.remove('active');
@@ -811,41 +755,34 @@ function setupMobileControls() {
 
     addTouchEvents(leftBtn, 'ArrowLeft');
     addTouchEvents(rightBtn, 'ArrowRight');
-    addTouchEvents(upBtn, 'ArrowUp');
     addTouchEvents(jumpBtn, 'Space');
 }
 
 document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-document.addEventListener('gesturestart', e => e.preventDefault());
-document.addEventListener('gesturechange', e => e.preventDefault());
 
 overlayBtn.addEventListener('click', handleOverlayClick);
-overlayBtn.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    handleOverlayClick();
-});
+overlayBtn.addEventListener('touchend', (e) => { e.preventDefault(); handleOverlayClick(); });
 
 function handleOverlayClick() {
     initAudio();
     if (gameState === 'menu' || gameState === 'gameover') {
-        score = 0;
-        loadLevel(1);
+        startGame();
         gameState = 'playing';
         hideOverlay();
-    } else if (gameState === 'levelcomplete') {
-        loadLevel(level + 1);
-        if (gameState !== 'gameover') {
-            gameState = 'playing';
-            hideOverlay();
-        }
     }
 }
 
-function showOverlay(title, text, info, btn) {
+function showOverlay(title, text, info, btn, showHS = true) {
     overlayTitle.textContent = title;
     overlayText.textContent = text;
-    overlayInfo.textContent = info;
+    overlayInfo.innerHTML = info;
     overlayBtn.textContent = btn;
+    if (showHS && highScore > 0) {
+        overlayHighscore.textContent = `🏆 HIGH SCORE: ${highScore}`;
+        overlayHighscore.style.display = 'block';
+    } else {
+        overlayHighscore.style.display = 'none';
+    }
     overlay.classList.remove('hidden');
 }
 
@@ -855,10 +792,9 @@ function hideOverlay() {
 
 function updateHUD() {
     document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('highScoreDisplay').textContent = highScore;
     document.getElementById('hungerMeter').style.width = Math.max(0, murry.hunger) + '%';
-    document.getElementById('bellyMeter').style.width = murry.belly + '%';
-    document.getElementById('poopDisplay').textContent = poopsCompleted + '/' + requiredPoops;
-    document.getElementById('levelDisplay').textContent = level;
+    document.getElementById('bellyMeter').style.width = Math.min(100, murry.belly) + '%';
 }
 
 // ============== UPDATE ==============
@@ -867,139 +803,140 @@ function update() {
 
     gameTime++;
     murry.animFrame++;
-    murry.breathOffset = Math.sin(gameTime * 0.05) * 2;
+
+    // Increase difficulty over time
+    difficulty = 1 + Math.floor(gameTime / 600) * 0.5; // Every 10 seconds
 
     // Blinking
     murry.blinkTimer--;
     if (murry.blinkTimer <= 0) {
-        if (murry.isBlinking) {
-            murry.isBlinking = false;
-            murry.blinkTimer = 120 + Math.random() * 180;
-        } else {
-            murry.isBlinking = true;
-            murry.blinkTimer = 5;
-        }
+        murry.isBlinking = !murry.isBlinking;
+        murry.blinkTimer = murry.isBlinking ? 6 : 100 + Math.random() * 150;
     }
 
-    // Hunger decay
-    murry.hunger -= currentLevel.hungerDecay;
+    // Hunger decay (faster over time)
+    const hungerDecay = 0.035 + difficulty * 0.008;
+    murry.hunger -= hungerDecay;
+
     if (murry.hunger <= 0) {
         murry.hunger = 0;
-        addFloatingText(murry.x + 20, murry.y - 30, getRandomQuote('hungry'), '#ff4444', 18);
-        showOverlay('😵 STARVED!', 'Murry ran out of fuel!', `Score: ${score}\n${getRandomQuote('hungry')}`, 'TRY AGAIN');
-        gameState = 'gameover';
+        gameOver('starved');
         return;
     }
 
     // Hungry warning
-    if (murry.hunger < 25 && gameTime % 120 === 0) {
-        addFloatingText(murry.x + 20, murry.y - 30, getRandomQuote('hungry'), '#ff8844', 14);
+    if (murry.hunger < 25 && gameTime % 90 === 0) {
+        addFloatingText(murry.x + 25, murry.y - 40, getRandomQuote('hungry'), '#ff6b6b', 14);
     }
 
-    // Power-up timers
-    if (murry.tumsActive > 0) murry.tumsActive--;
-    if (murry.laxativeActive > 0) murry.laxativeActive--;
-    if (murry.gasCooldown > 0) murry.gasCooldown--;
-
-    // Victory dance state
+    // Victory dance after poop
     if (murry.state === 'dancing') {
         murry.danceTimer--;
         if (murry.danceTimer <= 0) {
             murry.state = 'idle';
         }
-        updateHUD();
         updateEffects();
+        updateHUD();
         return;
     }
 
-    // Pooping state
+    // Pooping - THE MAIN EVENT
     if (murry.state === 'pooping') {
         murry.poopTimer++;
-        const poopDuration = murry.laxativeActive > 0 ? 45 : 90;
 
-        // Add stink during pooping
-        if (murry.poopTimer % 15 === 0) {
-            addStinkCloud(murry.x + 20, murry.y + 50, true);
+        // Constant rumbling shake during the deed
+        screenShake.intensity = Math.max(screenShake.intensity, 3 + Math.sin(murry.poopTimer * 0.3) * 2);
+
+        // Stink clouds throughout
+        if (murry.poopTimer % 8 === 0) {
+            addStinkCloud(murry.x + 25, murry.y + 55, true);
+            if (Math.random() < 0.4) playSound('fart');
         }
 
-        if (murry.poopTimer > poopDuration) {
+        // Buildup phase - increasing intensity
+        if (murry.poopTimer === 20) {
+            addFloatingText(murry.x + 25, murry.y - 40, "HERE IT COMES...", '#fbbf24', 16);
+            screenShake.intensity = 8;
+        }
+        if (murry.poopTimer === 45) {
+            addFloatingText(murry.x + 25, murry.y - 50, "HNNNGGGG!", '#ef4444', 20);
+            screenShake.intensity = 15;
+            playSound('bigfart');
+        }
+
+        // THE BIG FINISH
+        if (murry.poopTimer > 75) {
             murry.belly = 0;
             murry.state = 'dancing';
             murry.danceTimer = 60;
             murry.accidentTimer = 0;
             murry.faceRedness = 0;
-            poopsCompleted++;
+            totalPoops++;
+            score += 50;
 
-            // Effects
-            createParticles(murry.x + 20, murry.y + 55, ['#8B4513', '#654321', '#3d2314'], 20, { spread: 10, lift: 5 });
-            addStinkCloud(murry.x + 20, murry.y + 50, true);
-            addFloatingText(murry.x + 20, murry.y - 40, getRandomQuote('relief'), '#44ff44', 20);
-            screenShake.intensity = 12;
+            // MASSIVE effects
+            createParticles(murry.x + 25, murry.y + 60, ['#8B4513', '#654321', '#3d2314'], 35, { spread: 25 });
+            createParticles(murry.x + 25, murry.y + 50, ['#8B4513', '#5c3a1a'], 20, { spread: 30, vy: -5 });
+            addStinkCloud(murry.x + 25, murry.y + 55, true);
+            addStinkCloud(murry.x + 15, murry.y + 50, true);
+            addStinkCloud(murry.x + 35, murry.y + 50, true);
+            addFloatingText(murry.x + 25, murry.y - 60, getRandomQuote('relief'), '#4ade80', 26);
+            addFloatingText(murry.x + 25, murry.y - 90, "+50 RELIEF!", '#ffd93d', 20);
 
+            // EARTHQUAKE SHAKE
+            screenShake.intensity = 35;
+
+            // Sound sequence
             playSound('bigfart');
-            setTimeout(() => playSound('flush'), 400);
-            setTimeout(() => playSound('relief'), 800);
-
-            if (poopsCompleted >= requiredPoops && sandwiches.every(s => s.collected)) {
-                setTimeout(() => {
-                    showOverlay('✅ LEVEL COMPLETE!', `${currentLevel.name} conquered!`,
-                        `Score: ${score}\n"${getRandomQuote('relief')}"`, 'NEXT LEVEL');
-                    gameState = 'levelcomplete';
-                }, 1000);
-            }
+            setTimeout(() => {
+                playSound('flush');
+                screenShake.intensity = 20;
+            }, 400);
+            setTimeout(() => {
+                playSound('relief');
+                addFloatingText(murry.x + 25, murry.y - 30, "GLORIOUS!", '#4ade80', 18);
+            }, 800);
         }
-        updateHUD();
         updateEffects();
+        updateHUD();
         return;
     }
 
-    // ACCIDENT MECHANIC
-    const bellyThreshold = murry.tumsActive > 0 ? 120 : ACCIDENT_THRESHOLD;
-    if (murry.belly >= bellyThreshold && murry.state !== 'pooping') {
+    // ACCIDENT CHECK
+    if (murry.belly >= 100) {
         murry.accidentTimer++;
         murry.faceRedness = Math.min(1, murry.accidentTimer / ACCIDENT_TIME);
-        murry.eyeSize = 1 + murry.faceRedness * 0.5;
+        murry.eyeSize = 1 + murry.faceRedness * 0.6;
 
-        // Sweat and panic
-        if (murry.accidentTimer % 30 === 0) {
-            murry.sweatDrops.push({ x: murry.x + 10 + Math.random() * 20, y: murry.y - 5, vy: 0 });
-            addFloatingText(murry.x + 20, murry.y - 40, getRandomQuote('full'), '#ff0000', 14);
+        // Panic effects
+        if (murry.accidentTimer % 25 === 0) {
+            murry.sweatDrops.push({ x: murry.x + 12 + Math.random() * 26, y: murry.y - 8, vy: 0 });
+            addFloatingText(murry.x + 25, murry.y - 50, getRandomQuote('full'), '#ef4444', 15);
+            if (Math.random() < 0.3) playSound('rumble');
         }
 
-        // Random emergency farts
-        if (murry.accidentTimer > ACCIDENT_TIME * 0.5 && Math.random() < 0.02) {
+        // Emergency farts
+        if (murry.accidentTimer > ACCIDENT_TIME * 0.4 && Math.random() < 0.025) {
             playSound('fart');
-            addStinkCloud(murry.x + 20, murry.y + 50, false);
-            addFloatingText(murry.x + 20, murry.y + 30, "*PFFFT*", '#8B4513', 12);
+            addStinkCloud(murry.x + 25, murry.y + 55, false);
+            addFloatingText(murry.x + 25, murry.y + 35, "*PFFFT*", '#8B4513', 13);
         }
 
         // ACCIDENT!
         if (murry.accidentTimer >= ACCIDENT_TIME) {
-            murry.hasAccident = true;
-            murry.belly = 0;
-            murry.accidentTimer = 0;
-            murry.faceRedness = 0;
-            score = Math.max(0, score - 200);
-
-            playSound('accident');
-            createParticles(murry.x + 20, murry.y + 55, ['#8B4513', '#654321'], 25, { spread: 15, lift: 2 });
-            addStinkCloud(murry.x + 20, murry.y + 50, true);
-            addFloatingText(murry.x + 20, murry.y - 40, getRandomQuote('accident'), '#ff0000', 22);
-            addFloatingText(murry.x + 20, murry.y - 60, "-200 PTS", '#ff0000', 16);
-            screenShake.intensity = 20;
-
-            // Brown trail marker
-            createParticles(murry.x + 20, murry.y + 60, '#5c3d2e', 10, { spread: 5, gravity: 0, lift: 0 });
+            gameOver('accident');
+            return;
         }
     } else {
-        murry.accidentTimer = Math.max(0, murry.accidentTimer - 0.5);
-        murry.faceRedness = Math.max(0, murry.faceRedness - 0.01);
-        murry.eyeSize = Math.max(1, murry.eyeSize - 0.02);
+        murry.accidentTimer = Math.max(0, murry.accidentTimer - 1);
+        murry.faceRedness = Math.max(0, murry.faceRedness - 0.015);
+        murry.eyeSize = Math.max(1, murry.eyeSize - 0.025);
     }
 
     // Movement
-    const bellySlowdown = murry.belly > 80 ? 0.45 : murry.belly > 50 ? 0.7 : 1;
-    const speedMod = bellySlowdown;
+    const fatSlowdown = 1 - murry.fatness * 0.003; // Up to 30% slower when super fat
+    const bellySlowdown = murry.belly > 80 ? 0.55 : murry.belly > 50 ? 0.75 : 1;
+    const speedMod = fatSlowdown * bellySlowdown;
 
     if (keys['ArrowLeft'] || keys['KeyA']) {
         murry.vx = -murry.speed * speedMod;
@@ -1016,21 +953,13 @@ function update() {
 
     // Jump
     if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && murry.onGround) {
-        const jumpMod = murry.belly > 70 ? 0.7 : 1;
-        murry.vy = murry.jumpPower * jumpMod;
+        const jumpMod = murry.belly > 70 ? 0.75 : 1;
+        const fatJumpMod = 1 - murry.fatness * 0.002;
+        murry.vy = murry.jumpPower * jumpMod * fatJumpMod;
         murry.onGround = false;
         murry.state = 'jumping';
         playSound('jump');
-        createParticles(murry.x + 22, murry.y + 65, '#8B7355', 6, { spread: 4, lift: 1 });
-
-        // Gas boost jump when belly is high
-        if (murry.belly > 60 && murry.gasCooldown <= 0) {
-            murry.vy -= 4;
-            murry.gasCooldown = 60;
-            playSound('gasboost');
-            addStinkCloud(murry.x + 20, murry.y + 60, true);
-            addFloatingText(murry.x + 20, murry.y + 40, "GAS BOOST!", '#88ff88', 14);
-        }
+        createParticles(murry.x + 25, murry.y + 70, ['#8B7355', '#a08060'], 7, { spread: 8 });
     }
 
     // Physics
@@ -1045,9 +974,9 @@ function update() {
             murry.y + murry.height > p.y && murry.y + murry.height < p.y + p.h + 15 &&
             murry.vy >= 0) {
             murry.y = p.y - murry.height;
-            if (murry.vy > 8) {
-                screenShake.intensity = murry.vy * 0.5;
-                createParticles(murry.x + 22, murry.y + 65, '#8B7355', 8);
+            if (murry.vy > 10) {
+                screenShake.intensity = murry.vy * 0.4;
+                createParticles(murry.x + 25, murry.y + 70, ['#8B7355'], 8);
             }
             murry.vy = 0;
             murry.onGround = true;
@@ -1059,124 +988,187 @@ function update() {
     if (murry.x + murry.width > canvas.width) murry.x = canvas.width - murry.width;
 
     // Fall death
-    if (murry.y > canvas.height + 50) {
-        showOverlay('💀 FELL OFF!', 'Murry took a tumble!', `Score: ${score}`, 'TRY AGAIN');
-        gameState = 'gameover';
+    if (murry.y > canvas.height + 60) {
+        gameOver('fell');
         return;
     }
 
-    // Collect sandwiches
-    const maxBelly = murry.tumsActive > 0 ? 120 : 100;
-    for (const s of sandwiches) {
-        if (!s.collected && murry.belly < maxBelly &&
-            murry.x < s.x + s.w && murry.x + murry.width > s.x &&
-            murry.y < s.y + s.h && murry.y + murry.height > s.y) {
-            s.collected = true;
-            murry.belly = Math.min(maxBelly, murry.belly + 28);
-            murry.hunger = Math.min(100, murry.hunger + 30);
-            murry.mouthOpen = 10;
-            score += 100;
+    // Collect food
+    for (const food of foodItems) {
+        if (!food.collected &&
+            murry.x < food.x + food.w && murry.x + murry.width > food.x &&
+            murry.y < food.y + food.h && murry.y + murry.height > food.y) {
 
-            playSound('eat');
-            if (murry.belly > 50 && Math.random() < 0.4) {
-                setTimeout(() => playSound('burp'), 300);
-                setTimeout(() => addFloatingText(murry.x + 20, murry.y - 20, "*BURRRP*", '#88cc44', 14), 300);
+            food.collected = true;
+            totalItemsEaten++;
+            murry.fatness = Math.min(100, murry.fatness + 2); // Get fatter!
+            murry.mouthOpen = 12;
+
+            let points = 0;
+            let bellyAdd = 0;
+            let hungerAdd = 0;
+            let quoteType = 'eat';
+
+            if (food.type === 'sandwich') {
+                points = 100;
+                bellyAdd = 25;
+                hungerAdd = 28;
+                quoteType = 'eat';
+                createParticles(food.x + 20, food.y + 15, ['#FFD700', '#DEB887', '#32CD32'], 14);
+            } else if (food.type === 'spicy') {
+                points = 150;
+                bellyAdd = 35; // Spicy = more belly
+                hungerAdd = 32;
+                quoteType = 'eatSpicy';
+                createParticles(food.x + 20, food.y + 15, ['#ff4444', '#ff6b00', '#FFD700'], 16);
+                // Spicy makes you sweat!
+                murry.sweatDrops.push({ x: murry.x + 20, y: murry.y - 5, vy: 0 });
+            } else if (food.type === 'fries') {
+                points = 75;
+                bellyAdd = 18;
+                hungerAdd = 22;
+                quoteType = 'eatFries';
+                createParticles(food.x + 15, food.y + 15, ['#ffd93d', '#f59e0b', '#FFF8DC'], 12);
             }
 
-            createParticles(s.x + 19, s.y + 15, ['#FFD700', '#FFA500', '#DEB887'], 12);
-            addFloatingText(s.x + 19, s.y - 10, "+100", '#ffc300', 16);
-            addFloatingText(murry.x + 20, murry.y - 50, getRandomQuote('eat'), '#ffffff', 14);
-            screenShake.intensity = 5;
+            murry.belly = Math.min(100, murry.belly + bellyAdd);
+            murry.hunger = Math.min(100, murry.hunger + hungerAdd);
+            score += points;
+
+            playSound('eat');
+            if (murry.belly > 45 && Math.random() < 0.35) {
+                setTimeout(() => {
+                    playSound('burp');
+                    addFloatingText(murry.x + 25, murry.y - 25, "*BURRRP*", '#90EE90', 15);
+                }, 350);
+            }
+
+            addFloatingText(food.x + 20, food.y - 12, `+${points}`, '#ffd93d', 18);
+            addFloatingText(murry.x + 25, murry.y - 55, getRandomQuote(quoteType), '#ffffff', 15);
+            screenShake.intensity = 6;
         }
     }
     if (murry.mouthOpen > 0) murry.mouthOpen--;
 
-    // Collect powerups
-    for (const p of powerups) {
-        if (!p.collected &&
-            murry.x < p.x + p.w && murry.x + murry.width > p.x &&
-            murry.y < p.y + p.h && murry.y + murry.height > p.y) {
-            p.collected = true;
-            playSound('powerup');
-            createParticles(p.x + 15, p.y + 15, '#00ffff', 15);
-            score += 50;
-
-            if (p.type === 'tums') {
-                murry.tumsActive = 600; // 10 seconds
-                addFloatingText(p.x + 15, p.y - 10, "TUMS! +Belly Capacity", '#ff69b4', 14);
-            } else if (p.type === 'laxative') {
-                murry.laxativeActive = 600;
-                addFloatingText(p.x + 15, p.y - 10, "LAXATIVE! Fast Relief", '#9932cc', 14);
-            } else if (p.type === 'gasboost') {
-                murry.gasCooldown = 0;
-                murry.belly = Math.min(100, murry.belly + 30);
-                addFloatingText(p.x + 15, p.y - 10, "BEAN BURRITO! +Gas", '#228b22', 14);
-            }
-        }
-    }
-
     // Toilet interaction
-    const minBelly = murry.laxativeActive > 0 ? 30 : 50;
-    if (murry.belly >= minBelly &&
+    if (murry.belly >= 50 &&
         murry.x < toilet.x + toilet.w && murry.x + murry.width > toilet.x &&
-        murry.y < toilet.y + toilet.h && murry.y + murry.height > toilet.y) {
+        murry.y + murry.height > toilet.y && murry.y < toilet.y + toilet.h) {
         murry.state = 'pooping';
         murry.poopTimer = 0;
         murry.vx = 0;
-        murry.vy = 0;
     }
 
-    // Respawn sandwiches
-    if (sandwiches.every(s => s.collected) && poopsCompleted < requiredPoops) {
-        spawnSandwiches();
-        addFloatingText(400, 200, "MORE SANDWICHES!", '#ffc300', 20);
+    // Respawn food when all collected
+    if (foodItems.every(f => f.collected)) {
+        spawnFood();
+        addFloatingText(400, 150, "MORE CHICK-FIL-A!", '#e51636', 22);
     }
 
-    // Update sweat drops
+    // Update sweat
     murry.sweatDrops = murry.sweatDrops.filter(drop => {
-        drop.vy += 0.3;
+        drop.vy += 0.35;
         drop.y += drop.vy;
-        return drop.y < murry.y + 80;
+        return drop.y < murry.y + 90;
     });
 
     updateEffects();
     updateHUD();
 }
 
+function gameOver(reason) {
+    gameState = 'gameover';
+
+    // Update high score
+    const isNewRecord = score > highScore;
+    if (isNewRecord) {
+        highScore = score;
+        localStorage.setItem('murryFuelHighScore', highScore);
+    }
+
+    let title, text, info;
+
+    // Fat-based commentary
+    const fatComment = murry.fatness > 80 ? "Murry was MASSIVE" :
+                       murry.fatness > 50 ? "Murry got pretty chunky" :
+                       murry.fatness > 25 ? "Murry was getting thicc" : "Murry stayed relatively slim";
+
+    if (reason === 'accident') {
+        playSound('accident');
+        createParticles(murry.x + 25, murry.y + 60, ['#8B4513', '#654321'], 30, { spread: 20 });
+        addStinkCloud(murry.x + 25, murry.y + 55, true);
+        addFloatingText(murry.x + 25, murry.y - 50, getRandomQuote('accident'), '#ef4444', 24);
+        screenShake.intensity = 25;
+
+        const accidentTexts = [
+            "Murry's khakis are ruined...",
+            "The Chick-fil-A won this round",
+            "That spicy sandwich caught up to him",
+            "RIP Murry's underwear",
+            "He who smelt it, dealt it... and worse"
+        ];
+
+        title = "💩 ACCIDENT! 💩";
+        text = accidentTexts[Math.floor(Math.random() * accidentTexts.length)];
+        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
+    } else if (reason === 'starved') {
+        playSound('gameover');
+
+        const starveTexts = [
+            "It's CLOSED SUNDAYS!",
+            "The withdrawal symptoms got him",
+            "No Chick-fil-A? No Murry.",
+            "Murry needs his fix!",
+            "The CFA addiction is terminal"
+        ];
+
+        title = "😵 STARVED!";
+        text = starveTexts[Math.floor(Math.random() * starveTexts.length)];
+        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
+    } else {
+        playSound('gameover');
+
+        const fellTexts = [
+            "Too much chicken, not enough balance",
+            "Gravity: 1, Murry: 0",
+            "That belly threw off his center of gravity",
+            "Should've done fewer waffle fries",
+            "The floor is lava (and chicken grease)"
+        ];
+
+        title = "💀 FELL OFF!";
+        text = fellTexts[Math.floor(Math.random() * fellTexts.length)];
+        info = `${fatComment}<br><br>🍗 Items Eaten: ${totalItemsEaten}<br>🚽 Successful Poops: ${totalPoops}<br>🍔 Final Fatness: ${Math.floor(murry.fatness)}%<br><br>SCORE: ${score}${isNewRecord ? '<br>🎉 NEW HIGH SCORE! 🎉' : ''}`;
+    }
+
+    setTimeout(() => {
+        showOverlay(title, text, info, "EAT AGAIN!", true);
+    }, 1200);
+}
+
 function updateEffects() {
-    // Screen shake
     if (screenShake.intensity > 0) {
         screenShake.x = (Math.random() - 0.5) * screenShake.intensity;
         screenShake.y = (Math.random() - 0.5) * screenShake.intensity;
-        screenShake.intensity *= 0.9;
+        screenShake.intensity *= 0.88;
         if (screenShake.intensity < 0.5) screenShake.intensity = 0;
     }
 
-    // Particles
-    for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += p.gravity;
-        p.life -= 0.02;
-        if (p.life <= 0) particles.splice(i, 1);
-    }
-
-    // Floating texts
     for (let i = floatingTexts.length - 1; i >= 0; i--) {
         const t = floatingTexts[i];
         t.y += t.vy;
+        if (t.vx) t.x += t.vx;
+        if (t.isParticle) t.vy += 0.15;
         t.life -= t.decay;
         if (t.life <= 0) floatingTexts.splice(i, 1);
     }
 
-    // Stink clouds
     for (let i = stinkClouds.length - 1; i >= 0; i--) {
         const c = stinkClouds[i];
         c.x += c.vx;
         c.y += c.vy;
         c.rotation += 0.02;
-        c.size *= 1.01;
+        c.size *= 1.012;
         c.life -= c.decay;
         if (c.life <= 0) stinkClouds.splice(i, 1);
     }
@@ -1186,73 +1178,121 @@ function updateEffects() {
 function drawBackground() {
     // Sky gradient
     const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    grad.addColorStop(0, '#2d5a87');
-    grad.addColorStop(0.5, '#5a9fd4');
-    grad.addColorStop(1, '#87ceeb');
+    grad.addColorStop(0, '#1e3a5f');
+    grad.addColorStop(0.4, '#3b82b4');
+    grad.addColorStop(0.8, '#7ec8e3');
+    grad.addColorStop(1, '#b0d4e8');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Sun with glow
+    // Sun
     ctx.save();
-    const sunGlow = ctx.createRadialGradient(720, 70, 0, 720, 70, 80);
-    sunGlow.addColorStop(0, 'rgba(255, 220, 100, 1)');
-    sunGlow.addColorStop(0.5, 'rgba(255, 180, 50, 0.3)');
-    sunGlow.addColorStop(1, 'rgba(255, 150, 0, 0)');
+    const sunGlow = ctx.createRadialGradient(700, 80, 0, 700, 80, 90);
+    sunGlow.addColorStop(0, 'rgba(255, 230, 120, 1)');
+    sunGlow.addColorStop(0.4, 'rgba(255, 200, 80, 0.4)');
+    sunGlow.addColorStop(1, 'rgba(255, 180, 50, 0)');
     ctx.fillStyle = sunGlow;
     ctx.beginPath();
-    ctx.arc(720, 70, 80, 0, Math.PI * 2);
+    ctx.arc(700, 80, 90, 0, Math.PI * 2);
     ctx.fill();
-
-    ctx.fillStyle = '#FFE484';
+    ctx.fillStyle = '#fff5cc';
     ctx.beginPath();
-    ctx.arc(720, 70, 35, 0, Math.PI * 2);
+    ctx.arc(700, 80, 35, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
-    // Clouds with depth
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    [[80, 50, 1], [250, 80, 0.7], [450, 35, 1.2], [620, 90, 0.8]].forEach(([x, y, scale]) => {
+    // Clouds
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    [[60, 55, 1], [220, 90, 0.7], [400, 45, 1.1], [580, 85, 0.8], [750, 120, 0.6]].forEach(([x, y, scale]) => {
         ctx.save();
-        ctx.translate(x, y);
+        ctx.translate(x + Math.sin(gameTime * 0.008 + x) * 3, y);
         ctx.scale(scale, scale);
         ctx.beginPath();
-        ctx.arc(0, 0, 25, 0, Math.PI * 2);
-        ctx.arc(25, -8, 20, 0, Math.PI * 2);
-        ctx.arc(50, 0, 25, 0, Math.PI * 2);
-        ctx.arc(25, 8, 18, 0, Math.PI * 2);
+        ctx.arc(0, 0, 28, 0, Math.PI * 2);
+        ctx.arc(28, -8, 22, 0, Math.PI * 2);
+        ctx.arc(55, 0, 28, 0, Math.PI * 2);
+        ctx.arc(28, 10, 20, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
     });
 
-    // Distant hills
-    ctx.fillStyle = '#4a7c59';
+    // Chick-fil-A sign in background
+    ctx.save();
+    ctx.fillStyle = '#e51636';
+    ctx.fillRect(30, 140, 80, 50);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Chick-fil-A', 70, 160);
+    ctx.font = '8px Arial';
+    ctx.fillText('OPEN', 70, 175);
+    // Pole
+    ctx.fillStyle = '#333';
+    ctx.fillRect(65, 190, 10, 100);
+    ctx.restore();
+
+    // Cow with "EAT MOR CHIKIN" sign
+    ctx.save();
+    ctx.translate(650, 170);
+    // Cow body
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.moveTo(0, canvas.height);
-    ctx.quadraticCurveTo(200, canvas.height - 100, 400, canvas.height - 60);
-    ctx.quadraticCurveTo(600, canvas.height - 120, 800, canvas.height - 40);
-    ctx.lineTo(800, canvas.height);
+    ctx.ellipse(0, 0, 25, 18, 0, 0, Math.PI * 2);
     ctx.fill();
+    // Cow spots
+    ctx.fillStyle = '#1a1a1a';
+    ctx.beginPath();
+    ctx.ellipse(-10, -5, 8, 6, 0.3, 0, Math.PI * 2);
+    ctx.ellipse(12, 2, 6, 5, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+    // Cow head
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.ellipse(25, -5, 12, 10, 0.2, 0, Math.PI * 2);
+    ctx.fill();
+    // Cow snout
+    ctx.fillStyle = '#fcd9b6';
+    ctx.beginPath();
+    ctx.ellipse(32, -2, 6, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Cow eyes
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(24, -8, 2, 0, Math.PI * 2);
+    ctx.arc(30, -7, 2, 0, Math.PI * 2);
+    ctx.fill();
+    // Sign held by cow
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-40, -45, 60, 25);
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(-40, -45, 60, 25);
+    ctx.fillStyle = '#e51636';
+    ctx.font = 'bold 9px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('EAT MOR', -10, -35);
+    ctx.fillText('CHIKIN', -10, -25);
+    ctx.restore();
 }
 
 function drawPlatforms() {
     for (const p of platforms) {
         if (p.type === 'grass') {
-            // Grass platform with detail
             const grad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.h);
-            grad.addColorStop(0, '#4a8c4a');
-            grad.addColorStop(0.3, '#3d7a3d');
-            grad.addColorStop(1, '#2d5a2d');
+            grad.addColorStop(0, '#4ade80');
+            grad.addColorStop(0.2, '#22c55e');
+            grad.addColorStop(1, '#15803d');
             ctx.fillStyle = grad;
             ctx.fillRect(p.x, p.y, p.w, p.h);
 
-            // Dirt layer
-            ctx.fillStyle = '#8B6914';
-            ctx.fillRect(p.x, p.y + 8, p.w, p.h - 8);
+            // Dirt
+            ctx.fillStyle = '#92400e';
+            ctx.fillRect(p.x, p.y + 10, p.w, p.h - 10);
 
             // Grass blades
-            ctx.fillStyle = '#5cb85c';
-            for (let i = 0; i < p.w; i += 8) {
-                const h = 5 + Math.sin(i * 0.5 + gameTime * 0.05) * 2;
+            ctx.fillStyle = '#4ade80';
+            for (let i = 0; i < p.w; i += 6) {
+                const h = 6 + Math.sin(i * 0.4 + gameTime * 0.04) * 2;
                 ctx.beginPath();
                 ctx.moveTo(p.x + i, p.y);
                 ctx.lineTo(p.x + i + 2, p.y - h);
@@ -1260,651 +1300,665 @@ function drawPlatforms() {
                 ctx.fill();
             }
         } else {
-            // Wooden platform
             const grad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.h);
-            grad.addColorStop(0, '#b8860b');
-            grad.addColorStop(0.5, '#8b6914');
-            grad.addColorStop(1, '#6b4423');
+            grad.addColorStop(0, '#d97706');
+            grad.addColorStop(0.4, '#b45309');
+            grad.addColorStop(1, '#78350f');
             ctx.fillStyle = grad;
 
             // Rounded rect
-            const r = 4;
+            const r = 5;
             ctx.beginPath();
-            ctx.moveTo(p.x + r, p.y);
-            ctx.lineTo(p.x + p.w - r, p.y);
-            ctx.quadraticCurveTo(p.x + p.w, p.y, p.x + p.w, p.y + r);
-            ctx.lineTo(p.x + p.w, p.y + p.h - r);
-            ctx.quadraticCurveTo(p.x + p.w, p.y + p.h, p.x + p.w - r, p.y + p.h);
-            ctx.lineTo(p.x + r, p.y + p.h);
-            ctx.quadraticCurveTo(p.x, p.y + p.h, p.x, p.y + p.h - r);
-            ctx.lineTo(p.x, p.y + r);
-            ctx.quadraticCurveTo(p.x, p.y, p.x + r, p.y);
+            ctx.roundRect(p.x, p.y, p.w, p.h, r);
             ctx.fill();
 
             // Wood grain
-            ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
             ctx.lineWidth = 1;
-            for (let i = 0; i < p.w; i += 15) {
+            for (let i = 12; i < p.w; i += 18) {
                 ctx.beginPath();
-                ctx.moveTo(p.x + i, p.y + 4);
-                ctx.lineTo(p.x + i, p.y + p.h - 4);
+                ctx.moveTo(p.x + i, p.y + 3);
+                ctx.lineTo(p.x + i, p.y + p.h - 3);
                 ctx.stroke();
             }
 
-            // Highlight
-            ctx.fillStyle = 'rgba(255,255,255,0.2)';
-            ctx.fillRect(p.x + 2, p.y + 2, p.w - 4, 3);
+            // Top highlight
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.fillRect(p.x + 3, p.y + 2, p.w - 6, 3);
         }
     }
 }
 
 function drawToilet() {
     const t = toilet;
-    const x = t.x;
-    const y = t.y;
+    const x = t.x, y = t.y;
 
-    // Pulsing glow when needed
+    // Glow when needed
     if (murry.belly >= 50) {
-        const pulse = Math.sin(gameTime * 0.1) * 0.3 + 0.7;
-        ctx.shadowColor = murry.belly > 80 ? '#ff0000' : '#00ff00';
-        ctx.shadowBlur = 20 * pulse;
+        const urgency = murry.belly > 85 ? 1 : (murry.belly - 50) / 35;
+        const pulse = Math.sin(gameTime * 0.12) * 0.3 + 0.7;
+        ctx.shadowColor = murry.belly > 85 ? '#ef4444' : '#4ade80';
+        ctx.shadowBlur = (15 + urgency * 15) * pulse;
     }
 
-    // Base shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
     ctx.beginPath();
-    ctx.ellipse(x + 27, y + 62, 25, 6, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 66, 28, 7, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Tank
-    ctx.fillStyle = '#f0f0f0';
-    ctx.fillRect(x + 10, y, 35, 28);
-    ctx.fillStyle = '#e0e0e0';
-    ctx.fillRect(x + 10, y, 35, 5);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(x + 10, y, 40, 30);
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillRect(x + 10, y, 40, 6);
 
     // Tank lid
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.ellipse(x + 27, y + 2, 18, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 3, 22, 5, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Bowl
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.ellipse(x + 27, y + 48, 24, 14, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 50, 26, 16, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Inner bowl
-    ctx.fillStyle = '#e8f4f8';
+    ctx.fillStyle = '#f1f5f9';
     ctx.beginPath();
-    ctx.ellipse(x + 27, y + 48, 18, 10, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 50, 20, 12, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Water
-    ctx.fillStyle = '#a8d8ea';
+    ctx.fillStyle = '#7dd3fc';
     ctx.beginPath();
-    ctx.ellipse(x + 27, y + 50, 14, 7, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 52, 15, 8, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Water shine
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.beginPath();
-    ctx.ellipse(x + 22, y + 47, 4, 2, -0.3, 0, Math.PI * 2);
+    ctx.ellipse(x + 24, y + 49, 5, 2.5, -0.3, 0, Math.PI * 2);
     ctx.fill();
 
     // Seat
-    ctx.fillStyle = '#f8f8f8';
+    ctx.fillStyle = '#f8fafc';
+    ctx.strokeStyle = '#e2e8f0';
     ctx.lineWidth = 3;
-    ctx.strokeStyle = '#ddd';
     ctx.beginPath();
-    ctx.ellipse(x + 27, y + 35, 20, 8, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 36, 22, 9, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
-    // Flush handle
-    ctx.fillStyle = '#c0c0c0';
-    ctx.fillRect(x + 42, y + 10, 10, 4);
+    // Handle
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillRect(x + 48, y + 12, 12, 5);
     ctx.beginPath();
-    ctx.arc(x + 52, y + 12, 5, 0, Math.PI * 2);
+    ctx.arc(x + 60, y + 14, 6, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.shadowBlur = 0;
 
     // Sign
-    ctx.fillStyle = '#228b22';
-    ctx.font = 'bold 11px Arial';
+    ctx.fillStyle = murry.belly >= 50 ? '#e51636' : '#16a34a';
+    ctx.font = 'bold 12px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('🚽 RELIEF STATION', x + 27, y - 8);
-
-    // Toilet paper roll
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(x + 50, y + 25, 8, 15);
-    ctx.fillStyle = '#f0f0f0';
-    ctx.beginPath();
-    ctx.arc(x + 54, y + 25, 4, 0, Math.PI * 2);
-    ctx.fill();
-
-    // "Empty" sign on TP
-    ctx.fillStyle = '#ff0000';
-    ctx.font = 'bold 5px Arial';
-    ctx.fillText('EMPTY', x + 54, y + 33);
+    ctx.fillText(murry.belly >= 50 ? '🚽 GO NOW!' : '🚽 RELIEF', x + 30, y - 10);
 }
 
-function drawSandwich(s) {
-    if (s.collected) return;
+function drawFood(food) {
+    if (food.collected) return;
 
-    const bobY = Math.sin(gameTime * 0.08 + s.bob) * 4;
-    const x = s.x;
-    const y = s.y + bobY;
+    const bobY = Math.sin(gameTime * 0.07 + food.bob) * 4;
+    const x = food.x, y = food.y + bobY;
 
     ctx.save();
-    ctx.translate(x + 19, y + 15);
-    ctx.rotate(s.rotation + Math.sin(gameTime * 0.05) * 0.05);
-    ctx.translate(-19, -15);
 
     // Glow
-    ctx.shadowColor = '#FFD700';
-    ctx.shadowBlur = 15 + Math.sin(gameTime * 0.1) * 5;
+    ctx.shadowColor = food.type === 'spicy' ? '#ef4444' : '#ffd93d';
+    ctx.shadowBlur = 12 + Math.sin(gameTime * 0.08) * 4;
 
-    // Bottom bun
-    ctx.fillStyle = '#e8c373';
-    ctx.beginPath();
-    ctx.ellipse(19, 26, 18, 7, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#c9a55a';
-    ctx.beginPath();
-    ctx.ellipse(19, 28, 18, 5, 0, 0, Math.PI);
-    ctx.fill();
-
-    // Pickles
-    ctx.fillStyle = '#5a8f3e';
-    ctx.beginPath();
-    ctx.ellipse(10, 20, 4, 2, 0.3, 0, Math.PI * 2);
-    ctx.ellipse(28, 20, 4, 2, -0.3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Tomato
-    ctx.fillStyle = '#e74c3c';
-    ctx.beginPath();
-    ctx.ellipse(19, 19, 8, 2, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Lettuce
-    ctx.fillStyle = '#7dce82';
-    for (let i = 0; i < 6; i++) {
+    if (food.type === 'fries') {
+        // WAFFLE FRIES
+        // Container
+        ctx.fillStyle = '#e51636';
         ctx.beginPath();
-        ctx.arc(5 + i * 5, 17, 5, 0, Math.PI * 2);
+        ctx.moveTo(x, y + 35);
+        ctx.lineTo(x + 5, y + 12);
+        ctx.lineTo(x + 25, y + 12);
+        ctx.lineTo(x + 30, y + 35);
+        ctx.closePath();
         ctx.fill();
+
+        // Chick-fil-A logo on container
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 5px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('CFA', x + 15, y + 28);
+
+        // Waffle fries sticking out
+        ctx.fillStyle = '#fbbf24';
+        for (let i = 0; i < 5; i++) {
+            const fx = x + 5 + i * 5;
+            const fy = y + 8 - Math.abs(i - 2) * 4;
+            const fh = 12 + (i % 2) * 5;
+
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.roundRect(fx, fy, 6, fh, 2);
+            ctx.fill();
+
+            // Waffle pattern
+            ctx.strokeStyle = '#d97706';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(fx + 1, fy + 3);
+            ctx.lineTo(fx + 5, fy + 3);
+            ctx.moveTo(fx + 1, fy + 6);
+            ctx.lineTo(fx + 5, fy + 6);
+            ctx.moveTo(fx + 3, fy + 1);
+            ctx.lineTo(fx + 3, fy + fh - 2);
+            ctx.stroke();
+        }
+    } else {
+        // CHICKEN SANDWICH
+        const isSpicy = food.type === 'spicy';
+
+        // Bottom bun
+        ctx.fillStyle = '#d4a373';
+        ctx.beginPath();
+        ctx.ellipse(x + 20, y + 28, 19, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#bc8a5f';
+        ctx.beginPath();
+        ctx.ellipse(x + 20, y + 30, 19, 5, 0, 0, Math.PI);
+        ctx.fill();
+
+        // Pickles
+        ctx.fillStyle = '#65a30d';
+        ctx.beginPath();
+        ctx.ellipse(x + 12, y + 21, 5, 2.5, 0.3, 0, Math.PI * 2);
+        ctx.ellipse(x + 28, y + 21, 5, 2.5, -0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // CHICKEN PATTY
+        ctx.fillStyle = isSpicy ? '#dc2626' : '#d97706';
+        ctx.beginPath();
+        ctx.ellipse(x + 20, y + 14, 17, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Breading texture
+        ctx.fillStyle = isSpicy ? '#991b1b' : '#b45309';
+        for (let i = 0; i < 9; i++) {
+            ctx.beginPath();
+            ctx.arc(x + 8 + i * 3, y + 13 + (i % 2) * 3, 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Spicy indicator
+        if (isSpicy) {
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 6px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🔥SPICY🔥', x + 20, y + 16);
+        }
+
+        // Top bun
+        ctx.fillStyle = '#d4a373';
+        ctx.beginPath();
+        ctx.ellipse(x + 20, y + 5, 18, 10, 0, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillRect(x + 2, y + 4, 36, 6);
+
+        // Bun shine
+        ctx.fillStyle = '#e8d4b8';
+        ctx.beginPath();
+        ctx.ellipse(x + 16, y + 1, 9, 4, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sesame seeds (but not too many, like CFA)
+        ctx.fillStyle = '#fef3c7';
+        [[14, 0], [24, -1], [19, 4]].forEach(([ox, oy]) => {
+            ctx.beginPath();
+            ctx.ellipse(x + ox, y + oy, 2.5, 1.3, Math.random() * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
     }
-
-    // CRISPY CHICKEN PATTY
-    ctx.fillStyle = '#d4a543';
-    ctx.beginPath();
-    ctx.ellipse(19, 12, 16, 6, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Crispy texture
-    ctx.fillStyle = '#c49432';
-    for (let i = 0; i < 8; i++) {
-        ctx.beginPath();
-        ctx.arc(7 + i * 3, 11 + (i % 2) * 2, 2, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    // Top bun
-    ctx.fillStyle = '#e8c373';
-    ctx.beginPath();
-    ctx.ellipse(19, 5, 17, 9, 0, Math.PI, 2 * Math.PI);
-    ctx.fill();
-    ctx.fillRect(2, 4, 34, 5);
-
-    // Bun shine
-    ctx.fillStyle = '#f5dfa0';
-    ctx.beginPath();
-    ctx.ellipse(15, 2, 8, 3, -0.2, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Sesame seeds
-    ctx.fillStyle = '#fffacd';
-    [[12, 0], [22, -1], [17, 3], [26, 2], [9, 3]].forEach(([ox, oy]) => {
-        ctx.beginPath();
-        ctx.ellipse(ox, oy, 2.5, 1.2, Math.random() * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-    });
 
     ctx.shadowBlur = 0;
-
-    // CHICKEN label with better visibility
-    ctx.fillStyle = 'rgba(0,0,0,0.7)';
-    ctx.fillRect(6, 9, 26, 8);
-    ctx.fillStyle = '#FFD700';
-    ctx.font = 'bold 7px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('CHICKEN', 19, 15);
-
-    ctx.restore();
-}
-
-function drawPowerup(p) {
-    if (p.collected) return;
-
-    const bobY = Math.sin(gameTime * 0.1 + p.bob) * 5;
-    const x = p.x;
-    const y = p.y + bobY;
-
-    ctx.save();
-
-    // Glow and rotation
-    const colors = {
-        tums: '#ff69b4',
-        laxative: '#9932cc',
-        gasboost: '#228b22'
-    };
-
-    ctx.shadowColor = colors[p.type];
-    ctx.shadowBlur = 12;
-
-    ctx.translate(x + 15, y + 15);
-    ctx.rotate(gameTime * 0.03);
-    ctx.translate(-15, -15);
-
-    // Box
-    ctx.fillStyle = colors[p.type];
-    ctx.fillRect(0, 0, 30, 30);
-
-    // Icon
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '18px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const icons = { tums: '💊', laxative: '💩', gasboost: '🌯' };
-    ctx.fillText(icons[p.type], 15, 15);
-
     ctx.restore();
 }
 
 function drawMurry() {
     const x = murry.x;
-    const y = murry.y + murry.breathOffset;
-    const bellySize = (murry.belly / 100) * 15;
+    const y = murry.y;
+    const fatness = murry.fatness;
+    const bellySize = (murry.belly / 100) * 18 + fatness * 0.15;
 
     ctx.save();
 
-    // Flip if facing left
     if (murry.facing === -1) {
         ctx.translate(x + murry.width / 2, 0);
         ctx.scale(-1, 1);
         ctx.translate(-(x + murry.width / 2), 0);
     }
 
-    // Animation calculations
+    // Animation
     let legOffset = 0;
     let armSwing = 0;
+    let bodyBounce = 0;
     if (murry.state === 'running') {
-        legOffset = Math.sin(murry.animFrame * 0.5) * 8;
-        armSwing = Math.sin(murry.animFrame * 0.5) * 0.4;
+        legOffset = Math.sin(murry.animFrame * 0.45) * 8;
+        armSwing = Math.sin(murry.animFrame * 0.45) * 0.4;
+        bodyBounce = Math.abs(Math.sin(murry.animFrame * 0.45)) * 3;
     }
     if (murry.state === 'dancing') {
-        legOffset = Math.sin(murry.animFrame * 0.8) * 10;
-        armSwing = Math.sin(murry.animFrame * 0.8) * 0.6;
+        legOffset = Math.sin(murry.animFrame * 0.7) * 12;
+        armSwing = Math.sin(murry.animFrame * 0.7) * 0.7;
+        bodyBounce = Math.abs(Math.sin(murry.animFrame * 0.35)) * 5;
     }
 
-    // Shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    const breathOffset = Math.sin(gameTime * 0.05) * 1.5;
+
+    // Shadow (gets bigger with fatness)
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
     ctx.beginPath();
-    ctx.ellipse(x + 22, y + 68, 18 + bellySize/2, 6, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 25, y + 72 + fatness * 0.05, 20 + bellySize * 0.5, 6 + fatness * 0.02, 0, 0, Math.PI * 2);
     ctx.fill();
-
-    // Brown stain if accident happened
-    if (murry.hasAccident) {
-        ctx.fillStyle = 'rgba(101, 67, 33, 0.6)';
-        ctx.beginPath();
-        ctx.ellipse(x + 22, y + 45, 8, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
-    }
 
     // === GOLF SHOES ===
-    // Left shoe
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.ellipse(x + 10, y + 58 - legOffset/2, 8, 5, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 12, y + 62 - legOffset/2, 9, 5, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 38, y + 62 + legOffset/2, 9, 5, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#8B4513';
-    ctx.fillRect(x + 3, y + 60 - legOffset/2, 14, 4);
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(x + 4, y + 64 - legOffset/2, 16, 5);
+    ctx.fillRect(x + 30, y + 64 + legOffset/2, 16, 5);
     // Spikes
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#1f2937';
     for (let i = 0; i < 3; i++) {
-        ctx.fillRect(x + 5 + i * 4, y + 63 - legOffset/2, 2, 3);
+        ctx.fillRect(x + 6 + i * 5, y + 68 - legOffset/2, 2, 3);
+        ctx.fillRect(x + 32 + i * 5, y + 68 + legOffset/2, 2, 3);
     }
 
-    // Right shoe
-    ctx.fillStyle = '#ffffff';
+    // === LEGS === (lighter/fairer skin tone like real Murry)
+    ctx.fillStyle = '#ffe4cc';
     ctx.beginPath();
-    ctx.ellipse(x + 32, y + 58 + legOffset/2, 8, 5, 0, 0, Math.PI * 2);
+    ctx.moveTo(x + 14, y + 46);
+    ctx.lineTo(x + 8, y + 60 - legOffset/2);
+    ctx.lineTo(x + 18, y + 60 - legOffset/2);
+    ctx.lineTo(x + 18, y + 46);
     ctx.fill();
-    ctx.fillStyle = '#8B4513';
-    ctx.fillRect(x + 25, y + 60 + legOffset/2, 14, 4);
-    ctx.fillStyle = '#333';
-    for (let i = 0; i < 3; i++) {
-        ctx.fillRect(x + 27 + i * 4, y + 63 + legOffset/2, 2, 3);
-    }
-
-    // === LEGS ===
-    ctx.fillStyle = '#fdbf6f';
-    // Left leg
     ctx.beginPath();
-    ctx.moveTo(x + 12, y + 42);
-    ctx.lineTo(x + 6, y + 55 - legOffset/2);
-    ctx.lineTo(x + 14, y + 55 - legOffset/2);
-    ctx.lineTo(x + 16, y + 42);
-    ctx.fill();
-    // Right leg
-    ctx.beginPath();
-    ctx.moveTo(x + 28, y + 42);
-    ctx.lineTo(x + 30, y + 55 + legOffset/2);
-    ctx.lineTo(x + 38, y + 55 + legOffset/2);
-    ctx.lineTo(x + 32, y + 42);
+    ctx.moveTo(x + 32, y + 46);
+    ctx.lineTo(x + 32, y + 60 + legOffset/2);
+    ctx.lineTo(x + 42, y + 60 + legOffset/2);
+    ctx.lineTo(x + 36, y + 46);
     ctx.fill();
 
     // === KHAKI SHORTS ===
-    ctx.fillStyle = '#c3b091';
+    ctx.fillStyle = '#d4b896';
     ctx.beginPath();
-    ctx.moveTo(x + 8, y + 32);
-    ctx.lineTo(x + 36, y + 32);
-    ctx.lineTo(x + 38, y + 46);
-    ctx.lineTo(x + 6, y + 46);
+    ctx.moveTo(x + 8, y + 34 - bodyBounce);
+    ctx.lineTo(x + 42, y + 34 - bodyBounce);
+    ctx.lineTo(x + 44, y + 50);
+    ctx.lineTo(x + 6, y + 50);
     ctx.closePath();
     ctx.fill();
-    // Shorts seam
-    ctx.strokeStyle = '#a69070';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x + 22, y + 32);
-    ctx.lineTo(x + 22, y + 46);
-    ctx.stroke();
-    // Pocket
-    ctx.strokeStyle = '#a69070';
-    ctx.beginPath();
-    ctx.arc(x + 32, y + 38, 5, 0.5, 2.5);
-    ctx.stroke();
+    // Belt
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(x + 8, y + 33 - bodyBounce, 34, 4);
+    // Belt buckle
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillRect(x + 22, y + 33 - bodyBounce, 6, 4);
 
-    // === BELLY (grows!) ===
-    ctx.fillStyle = '#fdbf6f';
+    // === BELLY (THE MAIN EVENT - GETS HUGE!) ===
+    const totalBelly = bellySize + breathOffset;
+    ctx.fillStyle = '#ffe4cc'; // Lighter skin
     ctx.beginPath();
-    ctx.ellipse(x + 22, y + 26, 16 + bellySize, 14 + bellySize * 0.8, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 25, y + 26 - bodyBounce, 18 + totalBelly, 16 + totalBelly * 0.9, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // === FLORAL POLO SHIRT ===
-    // Main shirt (pink, stretches with belly)
-    const shirtPink = murry.faceRedness > 0 ?
-        `rgb(${255}, ${105 - murry.faceRedness * 50}, ${180 - murry.faceRedness * 80})` : '#FF69B4';
-    ctx.fillStyle = shirtPink;
+    // Belly button (more visible when fat)
+    if (fatness > 20) {
+        ctx.fillStyle = '#f5d5b8';
+        ctx.beginPath();
+        ctx.ellipse(x + 25, y + 32 - bodyBounce + totalBelly * 0.3, 2 + fatness * 0.02, 3 + fatness * 0.03, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // === FLORAL POLO === (White/blue like real Murry's shirt)
+    const shirtStretch = totalBelly * 0.7;
+    // White base, gets reddish when straining
+    const shirtColor = murry.faceRedness > 0 ?
+        `rgb(255, ${250 - murry.faceRedness * 50}, ${250 - murry.faceRedness * 60})` : '#f8fafc';
+
+    ctx.fillStyle = shirtColor;
     ctx.beginPath();
-    ctx.ellipse(x + 22, y + 22, 17 + bellySize, 15 + bellySize * 0.6, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 25, y + 22 - bodyBounce, 20 + shirtStretch, 17 + shirtStretch * 0.7, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Collar
-    ctx.fillStyle = '#FF1493';
+    // Shirt riding up when super fat (showing belly)
+    if (fatness > 40) {
+        ctx.fillStyle = '#ffe4cc';
+        ctx.beginPath();
+        ctx.ellipse(x + 25, y + 36 - bodyBounce, 12 + fatness * 0.1, 6 + fatness * 0.08, 0, 0, Math.PI);
+        ctx.fill();
+    }
+
+    // Collar (white polo collar)
+    ctx.fillStyle = '#e2e8f0';
     ctx.beginPath();
-    ctx.moveTo(x + 16, y + 6);
-    ctx.lineTo(x + 22, y + 14);
-    ctx.lineTo(x + 28, y + 6);
-    ctx.lineTo(x + 26, y + 4);
-    ctx.lineTo(x + 22, y + 10);
-    ctx.lineTo(x + 18, y + 4);
+    ctx.moveTo(x + 18, y + 6 - bodyBounce);
+    ctx.lineTo(x + 25, y + 14 - bodyBounce);
+    ctx.lineTo(x + 32, y + 6 - bodyBounce);
+    ctx.lineTo(x + 30, y + 4 - bodyBounce);
+    ctx.lineTo(x + 25, y + 10 - bodyBounce);
+    ctx.lineTo(x + 20, y + 4 - bodyBounce);
     ctx.closePath();
     ctx.fill();
 
     // Buttons
     ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(x + 22, y + 16, 2, 0, Math.PI * 2);
-    ctx.arc(x + 22, y + 22, 2, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Floral pattern (moves with belly)
-    const flowers = [
-        {dx: 10 - bellySize/4, dy: 18, c: '#FFFF00', size: 4},
-        {dx: 32 + bellySize/4, dy: 16, c: '#00FF00', size: 3.5},
-        {dx: 20, dy: 28 + bellySize/2, c: '#87CEEB', size: 4},
-        {dx: 12, dy: 30 + bellySize/2, c: '#FFA500', size: 3},
-        {dx: 30 + bellySize/4, dy: 26, c: '#FF6B6B', size: 3.5},
-        {dx: 16, dy: 12, c: '#DDA0DD', size: 3},
-    ];
-    flowers.forEach(f => {
-        // Flower petals
-        ctx.fillStyle = f.c;
-        for (let i = 0; i < 5; i++) {
-            const angle = (i / 5) * Math.PI * 2;
-            ctx.beginPath();
-            ctx.ellipse(
-                x + f.dx + Math.cos(angle) * f.size * 0.6,
-                y + f.dy + Math.sin(angle) * f.size * 0.6,
-                f.size * 0.5, f.size * 0.3, angle, 0, Math.PI * 2
-            );
-            ctx.fill();
-        }
-        // Flower center
-        ctx.fillStyle = '#FFFFFF';
+    [16, 22, 28].forEach(dy => {
         ctx.beginPath();
-        ctx.arc(x + f.dx, y + f.dy, f.size * 0.3, 0, Math.PI * 2);
+        ctx.arc(x + 25, y + dy - bodyBounce, 2, 0, Math.PI * 2);
         ctx.fill();
     });
 
-    // === ARMS ===
-    ctx.fillStyle = '#fdbf6f';
+    // Blue/teal floral pattern (like real Murry's shirt)
+    const flowers = [
+        {dx: 12 - shirtStretch/4, dy: 18, c: '#0ea5e9', s: 4},      // Sky blue
+        {dx: 36 + shirtStretch/4, dy: 16, c: '#06b6d4', s: 3.5},    // Cyan
+        {dx: 22, dy: 30 + shirtStretch/2, c: '#0284c7', s: 4},      // Blue
+        {dx: 14, dy: 32 + shirtStretch/2, c: '#0891b2', s: 3},      // Teal
+        {dx: 35 + shirtStretch/4, dy: 28, c: '#38bdf8', s: 3.5},    // Light blue
+        {dx: 18, dy: 12, c: '#22d3ee', s: 3},                        // Cyan
+        {dx: 28, dy: 14, c: '#0ea5e9', s: 2.5},                      // Extra detail
+    ];
+    flowers.forEach(f => {
+        ctx.fillStyle = f.c;
+        for (let i = 0; i < 5; i++) {
+            const angle = (i / 5) * Math.PI * 2 + gameTime * 0.01;
+            ctx.beginPath();
+            ctx.ellipse(
+                x + f.dx + Math.cos(angle) * f.s * 0.5,
+                y + f.dy - bodyBounce + Math.sin(angle) * f.s * 0.5,
+                f.s * 0.45, f.s * 0.3, angle, 0, Math.PI * 2
+            );
+            ctx.fill();
+        }
+        // White center
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(x + f.dx, y + f.dy - bodyBounce, f.s * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // Add some leaf/vine details in lighter blue
+    ctx.strokeStyle = '#7dd3fc';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x + 10, y + 24 - bodyBounce);
+    ctx.quadraticCurveTo(x + 20, y + 20 - bodyBounce, x + 30, y + 26 - bodyBounce);
+    ctx.stroke();
+
+    // === ARMS === (lighter skin)
+    ctx.fillStyle = '#ffe4cc';
     // Left arm
     ctx.save();
-    ctx.translate(x + 5, y + 14);
+    ctx.translate(x + 6, y + 14 - bodyBounce);
     ctx.rotate(-0.3 + armSwing);
     ctx.beginPath();
-    ctx.ellipse(0, 8, 5, 10, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 10, 6, 12, 0, 0, Math.PI * 2);
     ctx.fill();
-    // Hand
     ctx.beginPath();
-    ctx.arc(0, 18, 5, 0, Math.PI * 2);
+    ctx.arc(0, 22, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
     // Right arm
     ctx.save();
-    ctx.translate(x + 39, y + 14);
+    ctx.translate(x + 44, y + 14 - bodyBounce);
     ctx.rotate(0.3 - armSwing);
     ctx.beginPath();
-    ctx.ellipse(0, 8, 5, 10, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 10, 6, 12, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(0, 18, 5, 0, Math.PI * 2);
+    ctx.arc(0, 22, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
     // === HEAD ===
-    // Neck
-    ctx.fillStyle = '#fdbf6f';
-    ctx.fillRect(x + 18, y + 2, 8, 6);
+    // Neck (gets thicker when fat)
+    ctx.fillStyle = '#ffe4cc';
+    ctx.fillRect(x + 20, y + 2 - bodyBounce, 10 + fatness * 0.05, 8);
 
-    // Head shape
-    ctx.fillStyle = '#fdbf6f';
+    // Head (slightly bigger when fatter - double chin effect)
+    const headScale = 1 + fatness * 0.002;
+    ctx.save();
+    ctx.translate(x + 25, y - 8 - bodyBounce);
+    ctx.scale(headScale, headScale);
+
+    ctx.fillStyle = '#ffe4cc'; // Light/fair skin like real Murry
     ctx.beginPath();
-    ctx.ellipse(x + 22, y - 6, 14, 12, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, 15, 13, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Ears
-    ctx.beginPath();
-    ctx.ellipse(x + 8, y - 6, 4, 6, -0.2, 0, Math.PI * 2);
-    ctx.ellipse(x + 36, y - 6, 4, 6, 0.2, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Face redness when stressed
-    if (murry.faceRedness > 0) {
-        ctx.fillStyle = `rgba(255, 0, 0, ${murry.faceRedness * 0.3})`;
+    // Double chin when fat
+    if (fatness > 30) {
         ctx.beginPath();
-        ctx.ellipse(x + 22, y - 6, 14, 12, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 12, 8 + fatness * 0.08, 4 + fatness * 0.05, 0, 0, Math.PI);
         ctx.fill();
     }
 
-    // Hair
-    ctx.fillStyle = '#5a3825';
+    // Ears
     ctx.beginPath();
-    ctx.ellipse(x + 22, y - 12, 13, 8, 0, Math.PI, 2 * Math.PI);
+    ctx.ellipse(-14, 0, 4, 6, -0.2, 0, Math.PI * 2);
+    ctx.ellipse(14, 0, 4, 6, 0.2, 0, Math.PI * 2);
     ctx.fill();
-    // Hair tuft
+
+    // Face redness
+    if (murry.faceRedness > 0) {
+        ctx.fillStyle = `rgba(239, 68, 68, ${murry.faceRedness * 0.4})`;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 15, 13, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // === SNAPBACK CAP === (Black like "Bear Dance" cap)
+    // Cap brim
+    ctx.fillStyle = '#1f2937';
     ctx.beginPath();
-    ctx.moveTo(x + 18, y - 18);
-    ctx.quadraticCurveTo(x + 22, y - 24, x + 26, y - 18);
-    ctx.quadraticCurveTo(x + 22, y - 20, x + 18, y - 18);
+    ctx.ellipse(0, -12, 18, 5, 0, Math.PI, 2 * Math.PI);
+    ctx.fill();
+    // Brim front
+    ctx.fillStyle = '#111827';
+    ctx.beginPath();
+    ctx.moveTo(-16, -12);
+    ctx.quadraticCurveTo(-20, -8, -18, -4);
+    ctx.lineTo(18, -4);
+    ctx.quadraticCurveTo(20, -8, 16, -12);
+    ctx.closePath();
+    ctx.fill();
+    // Cap dome
+    ctx.fillStyle = '#1f2937';
+    ctx.beginPath();
+    ctx.ellipse(0, -15, 15, 12, 0, Math.PI, 2 * Math.PI);
+    ctx.fill();
+    // Cap button on top
+    ctx.fillStyle = '#374151';
+    ctx.beginPath();
+    ctx.arc(0, -26, 3, 0, Math.PI * 2);
+    ctx.fill();
+    // Cap panel lines
+    ctx.strokeStyle = '#111827';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(-8, -26);
+    ctx.lineTo(-6, -12);
+    ctx.moveTo(8, -26);
+    ctx.lineTo(6, -12);
+    ctx.stroke();
+
+    // Hair peeking out from under cap (black/dark brown)
+    ctx.fillStyle = '#1c1917';
+    ctx.beginPath();
+    ctx.ellipse(-12, -6, 5, 4, -0.3, 0, Math.PI * 2);
+    ctx.ellipse(12, -6, 5, 4, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Sideburns
+    ctx.fillRect(-14, -4, 3, 6);
+    ctx.fillRect(11, -4, 3, 6);
+
+    // === MOUSTACHE === (Thinner/subtler like real Murry)
+    ctx.fillStyle = '#1c1917'; // Dark/black
+    // Simple thin moustache
+    ctx.beginPath();
+    ctx.moveTo(-8, 4);
+    ctx.quadraticCurveTo(-4, 6, 0, 5);
+    ctx.quadraticCurveTo(4, 6, 8, 4);
+    ctx.quadraticCurveTo(4, 7, 0, 6);
+    ctx.quadraticCurveTo(-4, 7, -8, 4);
     ctx.fill();
 
     // Eyes
-    const eyeSize = 4 * murry.eyeSize;
+    const eyeSize = 4.5 * murry.eyeSize;
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.ellipse(x + 16, y - 8, eyeSize, eyeSize * 0.8, 0, 0, Math.PI * 2);
-    ctx.ellipse(x + 28, y - 8, eyeSize, eyeSize * 0.8, 0, 0, Math.PI * 2);
+    ctx.ellipse(-6, -3, eyeSize, eyeSize * 0.85, 0, 0, Math.PI * 2);
+    ctx.ellipse(6, -3, eyeSize, eyeSize * 0.85, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Pupils (look toward movement)
+    // Pupils
     const pupilOffset = murry.facing * 1.5;
-    ctx.fillStyle = '#4a3728';
     if (!murry.isBlinking) {
+        ctx.fillStyle = '#422006';
         ctx.beginPath();
-        ctx.arc(x + 16 + pupilOffset, y - 8, eyeSize * 0.5, 0, Math.PI * 2);
-        ctx.arc(x + 28 + pupilOffset, y - 8, eyeSize * 0.5, 0, Math.PI * 2);
+        ctx.arc(-6 + pupilOffset, -3, eyeSize * 0.5, 0, Math.PI * 2);
+        ctx.arc(6 + pupilOffset, -3, eyeSize * 0.5, 0, Math.PI * 2);
         ctx.fill();
 
         // Eye shine
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.arc(x + 15 + pupilOffset, y - 9, eyeSize * 0.2, 0, Math.PI * 2);
-        ctx.arc(x + 27 + pupilOffset, y - 9, eyeSize * 0.2, 0, Math.PI * 2);
+        ctx.arc(-7 + pupilOffset, -4, eyeSize * 0.2, 0, Math.PI * 2);
+        ctx.arc(5 + pupilOffset, -4, eyeSize * 0.2, 0, Math.PI * 2);
         ctx.fill();
     } else {
-        // Closed eyes
-        ctx.strokeStyle = '#4a3728';
+        ctx.strokeStyle = '#422006';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(x + 12, y - 8);
-        ctx.lineTo(x + 20, y - 8);
-        ctx.moveTo(x + 24, y - 8);
-        ctx.lineTo(x + 32, y - 8);
+        ctx.moveTo(-10, -3);
+        ctx.lineTo(-2, -3);
+        ctx.moveTo(2, -3);
+        ctx.lineTo(10, -3);
         ctx.stroke();
     }
 
-    // Eyebrows
-    ctx.strokeStyle = '#5a3825';
-    ctx.lineWidth = 2;
+    // Eyebrows (black like real Murry)
+    ctx.strokeStyle = '#1c1917';
+    ctx.lineWidth = 2.5;
     if (murry.belly > 80 || murry.state === 'pooping') {
-        // Worried eyebrows
         ctx.beginPath();
-        ctx.moveTo(x + 12, y - 14);
-        ctx.lineTo(x + 20, y - 12);
-        ctx.moveTo(x + 24, y - 12);
-        ctx.lineTo(x + 32, y - 14);
+        ctx.moveTo(-10, -10);
+        ctx.lineTo(-3, -7);
+        ctx.moveTo(3, -7);
+        ctx.lineTo(10, -10);
         ctx.stroke();
     } else {
-        // Normal eyebrows
         ctx.beginPath();
-        ctx.moveTo(x + 12, y - 13);
-        ctx.lineTo(x + 20, y - 13);
-        ctx.moveTo(x + 24, y - 13);
-        ctx.lineTo(x + 32, y - 13);
+        ctx.moveTo(-10, -9);
+        ctx.lineTo(-2, -9);
+        ctx.moveTo(2, -9);
+        ctx.lineTo(10, -9);
         ctx.stroke();
     }
 
     // Nose
-    ctx.fillStyle = '#e8a862';
+    ctx.fillStyle = '#eab892';
     ctx.beginPath();
-    ctx.ellipse(x + 22, y - 4, 3, 2, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 1, 3.5, 2.5, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Mouth expression
-    ctx.strokeStyle = '#8b5a3c';
-    ctx.lineWidth = 2;
+    // Mouth
+    ctx.strokeStyle = '#7c2d12';
+    ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
 
     if (murry.mouthOpen > 0) {
-        // Eating - open mouth
-        ctx.fillStyle = '#8b5a3c';
+        ctx.fillStyle = '#7c2d12';
         ctx.beginPath();
-        ctx.ellipse(x + 22, y + 2, 5, 4, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 10, 6, 5, 0, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#ff6b6b';
+        ctx.fillStyle = '#ef4444';
         ctx.beginPath();
-        ctx.ellipse(x + 22, y + 3, 3, 2, 0, 0, Math.PI);
+        ctx.ellipse(0, 11, 4, 3, 0, 0, Math.PI);
         ctx.fill();
     } else if (murry.state === 'pooping') {
-        // Straining face
         ctx.beginPath();
-        ctx.ellipse(x + 22, y + 2, 4, 3, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 10, 5, 4, 0, 0, Math.PI * 2);
         ctx.stroke();
-        // Gritted teeth
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(x + 19, y + 1, 6, 3);
-        ctx.strokeStyle = '#8b5a3c';
-        ctx.beginPath();
-        for (let i = 0; i < 3; i++) {
-            ctx.moveTo(x + 20 + i * 2, y + 1);
-            ctx.lineTo(x + 20 + i * 2, y + 4);
+        ctx.fillRect(-4, 9, 8, 3);
+        ctx.strokeStyle = '#7c2d12';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(-3 + i * 2, 9);
+            ctx.lineTo(-3 + i * 2, 12);
+            ctx.stroke();
         }
-        ctx.stroke();
     } else if (murry.state === 'dancing') {
-        // Big happy smile
         ctx.beginPath();
-        ctx.arc(x + 22, y, 6, 0.1 * Math.PI, 0.9 * Math.PI);
+        ctx.arc(0, 8, 7, 0.1 * Math.PI, 0.9 * Math.PI);
         ctx.stroke();
         // Rosy cheeks
-        ctx.fillStyle = 'rgba(255, 150, 150, 0.5)';
+        ctx.fillStyle = 'rgba(251, 146, 60, 0.5)';
         ctx.beginPath();
-        ctx.ellipse(x + 12, y - 2, 4, 3, 0, 0, Math.PI * 2);
-        ctx.ellipse(x + 32, y - 2, 4, 3, 0, 0, Math.PI * 2);
+        ctx.ellipse(-10, 2, 4, 3, 0, 0, Math.PI * 2);
+        ctx.ellipse(10, 2, 4, 3, 0, 0, Math.PI * 2);
         ctx.fill();
     } else if (murry.belly > 80) {
-        // Uncomfortable grimace
         ctx.beginPath();
-        ctx.moveTo(x + 17, y + 2);
-        ctx.lineTo(x + 20, y + 4);
-        ctx.lineTo(x + 24, y + 2);
-        ctx.lineTo(x + 27, y + 4);
+        ctx.moveTo(-6, 10);
+        ctx.lineTo(-3, 12);
+        ctx.lineTo(0, 10);
+        ctx.lineTo(3, 12);
+        ctx.lineTo(6, 10);
         ctx.stroke();
     } else if (murry.hunger < 30) {
-        // Hungry frown
         ctx.beginPath();
-        ctx.arc(x + 22, y + 6, 5, 1.2 * Math.PI, 1.8 * Math.PI);
+        ctx.arc(0, 14, 5, 1.15 * Math.PI, 1.85 * Math.PI);
         ctx.stroke();
     } else {
-        // Normal slight smile
         ctx.beginPath();
-        ctx.arc(x + 22, y, 4, 0.15 * Math.PI, 0.85 * Math.PI);
+        ctx.arc(0, 8, 5, 0.1 * Math.PI, 0.9 * Math.PI);
         ctx.stroke();
     }
 
+    ctx.restore(); // End head scale
+
     // Sweat drops
-    ctx.fillStyle = '#87CEEB';
+    ctx.fillStyle = '#7dd3fc';
     murry.sweatDrops.forEach(drop => {
         ctx.beginPath();
         ctx.moveTo(drop.x, drop.y);
-        ctx.quadraticCurveTo(drop.x - 3, drop.y + 5, drop.x, drop.y + 8);
-        ctx.quadraticCurveTo(drop.x + 3, drop.y + 5, drop.x, drop.y);
+        ctx.quadraticCurveTo(drop.x - 3, drop.y + 6, drop.x, drop.y + 10);
+        ctx.quadraticCurveTo(drop.x + 3, drop.y + 6, drop.x, drop.y);
         ctx.fill();
     });
 
-    // Status indicators above head
-    if (murry.belly > 70) {
-        const urgency = murry.belly > 90 ? '🚽❗❗' : murry.belly > 80 ? '🚽❗' : '🚽';
-        ctx.font = 'bold 14px Arial';
-        ctx.fillStyle = murry.belly > 90 ? '#ff0000' : '#ff8800';
+    // Status indicator
+    if (murry.belly > 75) {
+        const urgency = murry.belly > 95 ? '🚽💀💀' : murry.belly > 85 ? '🚽❗❗' : '🚽❗';
+        ctx.font = 'bold 16px Arial';
+        ctx.fillStyle = murry.belly > 95 ? '#ef4444' : '#f97316';
         ctx.textAlign = 'center';
-        ctx.fillText(urgency, x + 22, y - 28);
-    }
-
-    // Power-up indicators
-    if (murry.tumsActive > 0) {
-        ctx.font = '12px Arial';
-        ctx.fillText('💊', x + 8, y - 26);
-    }
-    if (murry.laxativeActive > 0) {
-        ctx.font = '12px Arial';
-        ctx.fillText('💩', x + 36, y - 26);
+        ctx.fillText(urgency, x + 25, y - 35 - bodyBounce);
     }
 
     ctx.restore();
@@ -1913,44 +1967,39 @@ function drawMurry() {
 function drawStinkClouds() {
     stinkClouds.forEach(cloud => {
         ctx.save();
-        ctx.globalAlpha = cloud.life * 0.6;
+        ctx.globalAlpha = cloud.life * 0.55;
         ctx.translate(cloud.x, cloud.y);
         ctx.rotate(cloud.rotation);
 
-        // Green stink cloud
         const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, cloud.size);
-        gradient.addColorStop(0, 'rgba(100, 150, 50, 0.8)');
-        gradient.addColorStop(0.5, 'rgba(80, 120, 40, 0.4)');
-        gradient.addColorStop(1, 'rgba(60, 100, 30, 0)');
+        gradient.addColorStop(0, 'rgba(132, 204, 22, 0.7)');
+        gradient.addColorStop(0.5, 'rgba(101, 163, 13, 0.4)');
+        gradient.addColorStop(1, 'rgba(77, 124, 15, 0)');
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        // Wavy cloud shape
         for (let i = 0; i < 8; i++) {
             const angle = (i / 8) * Math.PI * 2;
-            const wobble = Math.sin(i * 2 + cloud.rotation * 5) * cloud.size * 0.2;
+            const wobble = Math.sin(i * 2.5 + cloud.rotation * 4) * cloud.size * 0.25;
             const r = cloud.size + wobble;
-            if (i === 0) {
-                ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
-            } else {
-                ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-            }
+            if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+            else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
         }
         ctx.closePath();
         ctx.fill();
 
         // Stink lines
-        ctx.strokeStyle = `rgba(80, 120, 40, ${cloud.life * 0.5})`;
+        ctx.strokeStyle = `rgba(101, 163, 13, ${cloud.life * 0.4})`;
         ctx.lineWidth = 2;
         for (let i = 0; i < 3; i++) {
             ctx.beginPath();
-            const startAngle = cloud.rotation + i * 2;
-            ctx.moveTo(Math.cos(startAngle) * 5, Math.sin(startAngle) * 5);
+            const startAngle = cloud.rotation + i * 2.1;
+            ctx.moveTo(Math.cos(startAngle) * 4, Math.sin(startAngle) * 4);
             ctx.quadraticCurveTo(
-                Math.cos(startAngle + 0.5) * cloud.size * 0.5,
-                Math.sin(startAngle + 0.5) * cloud.size * 0.5 - 5,
-                Math.cos(startAngle + 1) * cloud.size * 0.7,
-                Math.sin(startAngle + 1) * cloud.size * 0.7 - 10
+                Math.cos(startAngle + 0.5) * cloud.size * 0.45,
+                Math.sin(startAngle + 0.5) * cloud.size * 0.45 - 6,
+                Math.cos(startAngle + 1) * cloud.size * 0.65,
+                Math.sin(startAngle + 1) * cloud.size * 0.65 - 12
             );
             ctx.stroke();
         }
@@ -1959,30 +2008,24 @@ function drawStinkClouds() {
     });
 }
 
-function drawParticles() {
-    particles.forEach(p => {
-        ctx.globalAlpha = p.life;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-    });
-    ctx.globalAlpha = 1;
-}
-
 function drawFloatingTexts() {
     floatingTexts.forEach(t => {
         ctx.globalAlpha = t.life;
-        ctx.fillStyle = t.color;
-        ctx.font = `bold ${t.size}px Arial`;
-        ctx.textAlign = 'center';
-
-        // Text shadow
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
-        ctx.fillText(t.text, t.x + 2, t.y + 2);
-
-        ctx.fillStyle = t.color;
-        ctx.fillText(t.text, t.x, t.y);
+        if (t.isParticle) {
+            ctx.fillStyle = t.color;
+            ctx.beginPath();
+            ctx.arc(t.x, t.y, t.size, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            ctx.font = `bold ${t.size}px Arial`;
+            ctx.textAlign = 'center';
+            // Shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillText(t.text, t.x + 2, t.y + 2);
+            // Text
+            ctx.fillStyle = t.color;
+            ctx.fillText(t.text, t.x, t.y);
+        }
     });
     ctx.globalAlpha = 1;
 }
@@ -1994,11 +2037,9 @@ function draw() {
     drawBackground();
     drawPlatforms();
     drawToilet();
-    powerups.forEach(p => drawPowerup(p));
-    sandwiches.forEach(s => drawSandwich(s));
+    foodItems.forEach(f => drawFood(f));
     drawStinkClouds();
     drawMurry();
-    drawParticles();
     drawFloatingTexts();
 
     ctx.restore();
@@ -2010,12 +2051,13 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Initialize
+// Start
 setupMobileControls();
-showOverlay('🍗 MURRY FUEL 🍗',
-    'Help Murry devour chicken sandwiches!',
-    'Eat until FULL → Find the TOILET before it\'s too late! → REPEAT!\n\n⚠️ Wait too long = ACCIDENT! (-200 pts)',
-    'START GAME');
+document.getElementById('highScoreDisplay').textContent = highScore;
+showOverlay('🐔 MURRY FUEL 🐔',
+    '"My pleasure... to eat ALL of it"',
+    'Murry is ADDICTED to Chick-fil-A.<br><br>🍗 Eat sandwiches & waffle fries<br>🔥 Spicy ones fill you up faster!<br>🚽 Get to the toilet before you EXPLODE<br>💀 Hold it too long = ACCIDENT!<br><br>How long can Murry last?',
+    'EAT! MY PLEASURE!', true);
 gameLoop();
 </script>
 </body>
