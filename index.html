@@ -418,22 +418,20 @@
     </div>
 
 <script>
-// Polyfill for roundRect (Safari/older browser support)
-if (!CanvasRenderingContext2D.prototype.roundRect) {
-    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
-        // Handle single radius value
-        let r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0);
-        if (r > w / 2) r = w / 2;
-        if (r > h / 2) r = h / 2;
-
-        this.moveTo(x + r, y);
-        this.arcTo(x + w, y, x + w, y + h, r);
-        this.arcTo(x + w, y + h, x, y + h, r);
-        this.arcTo(x, y + h, x, y, r);
-        this.arcTo(x, y, x + w, y, r);
-        this.closePath();
-        return this;
-    };
+// Universal rounded rectangle helper (works on ALL browsers)
+function drawRoundedRect(ctx, x, y, w, h, r) {
+    if (r > w / 2) r = w / 2;
+    if (r > h / 2) r = h / 2;
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
 }
 
 const canvas = document.getElementById('game');
@@ -1649,7 +1647,7 @@ function drawPlatforms() {
             // Rounded rect
             const r = 5;
             ctx.beginPath();
-            ctx.roundRect(p.x, p.y, p.w, p.h, r);
+            drawRoundedRect(ctx, p.x, p.y, p.w, p.h, r);
             ctx.fill();
 
             // Wood grain
@@ -1671,6 +1669,7 @@ function drawPlatforms() {
 
 function drawToilet() {
     const t = toilet;
+    if (t.x === undefined) return; // Not initialized yet
     const x = t.x, y = t.y;
     const isPooping = murry.state === 'pooping';
     const urgency = murry.belly >= 50 ? (murry.belly - 50) / 50 : 0;
@@ -1747,7 +1746,7 @@ function drawToilet() {
     // Tank back shadow
     ctx.fillStyle = '#cbd5e1';
     ctx.beginPath();
-    ctx.roundRect(x + 8, y - 2, 44, 34, 4);
+    drawRoundedRect(ctx, x + 8, y - 2, 44, 34, 4);
     ctx.fill();
     // Tank body
     const tankGrad = ctx.createLinearGradient(x + 10, y, x + 50, y);
@@ -1756,7 +1755,7 @@ function drawToilet() {
     tankGrad.addColorStop(1, '#e2e8f0');
     ctx.fillStyle = tankGrad;
     ctx.beginPath();
-    ctx.roundRect(x + 10, y, 40, 32, 3);
+    drawRoundedRect(ctx, x + 10, y, 40, 32, 3);
     ctx.fill();
     // Tank highlight
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
@@ -1897,7 +1896,7 @@ function drawToilet() {
     // Sign background
     ctx.fillStyle = murry.belly >= 50 ? (isUrgent ? '#dc2626' : '#16a34a') : '#6b7280';
     ctx.beginPath();
-    ctx.roundRect(x - 5, signY - 15 + signPulse, 70, 28, 6);
+    drawRoundedRect(ctx, x - 5, signY - 15 + signPulse, 70, 28, 6);
     ctx.fill();
 
     // Sign border
@@ -1982,7 +1981,7 @@ function drawFood(food) {
 
             ctx.fillStyle = '#fbbf24';
             ctx.beginPath();
-            ctx.roundRect(fx, fy, 6, fh, 2);
+            drawRoundedRect(ctx, fx, fy, 6, fh, 2);
             ctx.fill();
 
             // Waffle pattern
@@ -2092,7 +2091,7 @@ function drawPutter(putter) {
     // Putter head (darker metal)
     ctx.fillStyle = '#4b5563';
     ctx.beginPath();
-    ctx.roundRect(-25, -8, 12, 16, 2);
+    drawRoundedRect(ctx, -25, -8, 12, 16, 2);
     ctx.fill();
 
     // Head face (hitting surface)
@@ -2646,7 +2645,7 @@ function draw() {
     drawPlatforms();
     drawToilet();
     foodItems.forEach(f => drawFood(f));
-    putters.forEach(p => drawPutter(p)); // Draw golf putters
+    putters.forEach(p => drawPutter(p));
     drawStinkClouds();
     drawMurry();
     drawFloatingTexts();
