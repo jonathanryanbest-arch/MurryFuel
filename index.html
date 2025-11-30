@@ -1499,80 +1499,275 @@ function drawPlatforms() {
 function drawToilet() {
     const t = toilet;
     const x = t.x, y = t.y;
+    const isPooping = murry.state === 'pooping';
+    const urgency = murry.belly >= 50 ? (murry.belly - 50) / 50 : 0;
+    const isUrgent = murry.belly > 85;
 
-    // Glow when needed
+    ctx.save();
+
+    // === URGENT GLOW EFFECT ===
     if (murry.belly >= 50) {
-        const urgency = murry.belly > 85 ? 1 : (murry.belly - 50) / 35;
-        const pulse = Math.sin(gameTime * 0.12) * 0.3 + 0.7;
-        ctx.shadowColor = murry.belly > 85 ? '#ef4444' : '#4ade80';
-        ctx.shadowBlur = (15 + urgency * 15) * pulse;
+        const pulse = Math.sin(gameTime * 0.15) * 0.4 + 0.6;
+        const glowColor = isUrgent ? '#ef4444' : '#4ade80';
+        const glowSize = (20 + urgency * 25) * pulse;
+
+        // Outer glow
+        const glow = ctx.createRadialGradient(x + 30, y + 40, 10, x + 30, y + 40, 60 + glowSize);
+        glow.addColorStop(0, isUrgent ? 'rgba(239,68,68,0.4)' : 'rgba(74,222,128,0.3)');
+        glow.addColorStop(0.5, isUrgent ? 'rgba(239,68,68,0.15)' : 'rgba(74,222,128,0.1)');
+        glow.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(x - 40, y - 40, 140, 140);
+
+        ctx.shadowColor = glowColor;
+        ctx.shadowBlur = glowSize;
     }
 
-    // Shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    // === FLOOR MAT ===
+    ctx.fillStyle = '#4a5568';
     ctx.beginPath();
-    ctx.ellipse(x + 30, y + 66, 28, 7, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 70, 35, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#2d3748';
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 70, 30, 7, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Tank
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(x + 10, y, 40, 30);
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillRect(x + 10, y, 40, 6);
+    // === SHADOW ===
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 68, 28, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // === TOILET PAPER HOLDER ===
+    // Wall mount
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillRect(x - 18, y + 20, 6, 25);
+    // Holder bar
+    ctx.fillStyle = '#d1d5db';
+    ctx.fillRect(x - 16, y + 28, 18, 4);
+    // Toilet paper roll
+    ctx.fillStyle = '#fefefe';
+    ctx.beginPath();
+    ctx.ellipse(x - 4, y + 30, 10, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Roll inner
+    ctx.fillStyle = '#d4a373';
+    ctx.beginPath();
+    ctx.arc(x - 4, y + 30, 4, 0, Math.PI * 2);
+    ctx.fill();
+    // Paper hanging down
+    ctx.fillStyle = '#fefefe';
+    ctx.fillRect(x - 10, y + 38, 12, 15);
+    // Paper perforations
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 2]);
+    ctx.beginPath();
+    ctx.moveTo(x - 10, y + 45);
+    ctx.lineTo(x + 2, y + 45);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // === TANK ===
+    // Tank back shadow
+    ctx.fillStyle = '#cbd5e1';
+    ctx.beginPath();
+    ctx.roundRect(x + 8, y - 2, 44, 34, 4);
+    ctx.fill();
+    // Tank body
+    const tankGrad = ctx.createLinearGradient(x + 10, y, x + 50, y);
+    tankGrad.addColorStop(0, '#f1f5f9');
+    tankGrad.addColorStop(0.5, '#ffffff');
+    tankGrad.addColorStop(1, '#e2e8f0');
+    ctx.fillStyle = tankGrad;
+    ctx.beginPath();
+    ctx.roundRect(x + 10, y, 40, 32, 3);
+    ctx.fill();
+    // Tank highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillRect(x + 12, y + 2, 8, 28);
 
     // Tank lid
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.ellipse(x + 30, y + 3, 22, 5, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 2, 23, 6, 0, 0, Math.PI * 2);
     ctx.fill();
-
-    // Bowl
-    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Lid top highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
     ctx.beginPath();
-    ctx.ellipse(x + 30, y + 50, 26, 16, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 26, y, 10, 3, -0.2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Inner bowl
-    ctx.fillStyle = '#f1f5f9';
+    // === HANDLE (Chrome) ===
+    ctx.fillStyle = '#9ca3af';
+    ctx.fillRect(x + 50, y + 10, 14, 6);
+    // Handle knob with shine
+    const handleGrad = ctx.createRadialGradient(x + 64, y + 12, 0, x + 64, y + 14, 8);
+    handleGrad.addColorStop(0, '#e5e7eb');
+    handleGrad.addColorStop(0.5, '#9ca3af');
+    handleGrad.addColorStop(1, '#6b7280');
+    ctx.fillStyle = handleGrad;
     ctx.beginPath();
-    ctx.ellipse(x + 30, y + 50, 20, 12, 0, 0, Math.PI * 2);
+    ctx.arc(x + 64, y + 13, 7, 0, Math.PI * 2);
     ctx.fill();
-
-    // Water
-    ctx.fillStyle = '#7dd3fc';
-    ctx.beginPath();
-    ctx.ellipse(x + 30, y + 52, 15, 8, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Water shine
+    // Handle shine
     ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.beginPath();
-    ctx.ellipse(x + 24, y + 49, 5, 2.5, -0.3, 0, Math.PI * 2);
+    ctx.arc(x + 62, y + 11, 3, 0, Math.PI * 2);
     ctx.fill();
 
-    // Seat
-    ctx.fillStyle = '#f8fafc';
-    ctx.strokeStyle = '#e2e8f0';
-    ctx.lineWidth = 3;
+    // === BOWL ===
+    // Bowl outer
+    const bowlGrad = ctx.createLinearGradient(x, y + 35, x + 60, y + 65);
+    bowlGrad.addColorStop(0, '#f8fafc');
+    bowlGrad.addColorStop(0.5, '#ffffff');
+    bowlGrad.addColorStop(1, '#e2e8f0');
+    ctx.fillStyle = bowlGrad;
     ctx.beginPath();
-    ctx.ellipse(x + 30, y + 36, 22, 9, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 30, y + 50, 28, 18, 0, 0, Math.PI * 2);
     ctx.fill();
+
+    // Bowl rim shadow
+    ctx.fillStyle = '#cbd5e1';
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 52, 24, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bowl inner
+    ctx.fillStyle = '#f1f5f9';
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 50, 22, 13, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // === WATER (with animation when flushing/pooping) ===
+    ctx.save();
+    if (isPooping && murry.poopTimer > 60) {
+        // Swirling water animation
+        ctx.translate(x + 30, y + 52);
+        ctx.rotate(murry.poopTimer * 0.15);
+        ctx.translate(-(x + 30), -(y + 52));
+    }
+
+    // Water base
+    const waterGrad = ctx.createRadialGradient(x + 30, y + 50, 0, x + 30, y + 52, 18);
+    waterGrad.addColorStop(0, '#93c5fd');
+    waterGrad.addColorStop(0.7, '#60a5fa');
+    waterGrad.addColorStop(1, '#3b82f6');
+    ctx.fillStyle = waterGrad;
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 52, 17, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Water ripples (animated)
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1.5;
+    const rippleOffset = Math.sin(gameTime * 0.08) * 2;
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 52, 8 + rippleOffset, 4 + rippleOffset * 0.5, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 52, 12 - rippleOffset, 6 - rippleOffset * 0.5, 0, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Handle
-    ctx.fillStyle = '#a1a1aa';
-    ctx.fillRect(x + 48, y + 12, 12, 5);
+    // Water shine
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
     ctx.beginPath();
-    ctx.arc(x + 60, y + 14, 6, 0, Math.PI * 2);
+    ctx.ellipse(x + 24, y + 49, 6, 3, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // === SEAT ===
+    // Seat shadow
+    ctx.fillStyle = '#d1d5db';
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 38, 25, 11, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Seat body
+    const seatGrad = ctx.createLinearGradient(x + 5, y + 30, x + 55, y + 45);
+    seatGrad.addColorStop(0, '#f8fafc');
+    seatGrad.addColorStop(0.5, '#ffffff');
+    seatGrad.addColorStop(1, '#f1f5f9');
+    ctx.fillStyle = seatGrad;
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 36, 24, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Seat hole
+    ctx.fillStyle = '#e2e8f0';
+    ctx.beginPath();
+    ctx.ellipse(x + 30, y + 36, 18, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Seat highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.beginPath();
+    ctx.ellipse(x + 22, y + 33, 8, 3, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Seat hinges
+    ctx.fillStyle = '#9ca3af';
+    ctx.beginPath();
+    ctx.arc(x + 12, y + 32, 3, 0, Math.PI * 2);
+    ctx.arc(x + 48, y + 32, 3, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.shadowBlur = 0;
 
-    // Sign
-    ctx.fillStyle = murry.belly >= 50 ? '#e51636' : '#16a34a';
-    ctx.font = 'bold 12px Arial';
+    // === SIGN ABOVE TOILET ===
+    const signY = y - 25;
+    const signPulse = murry.belly >= 50 ? Math.sin(gameTime * 0.12) * 3 : 0;
+
+    // Sign background
+    ctx.fillStyle = murry.belly >= 50 ? (isUrgent ? '#dc2626' : '#16a34a') : '#6b7280';
+    ctx.beginPath();
+    ctx.roundRect(x - 5, signY - 15 + signPulse, 70, 28, 6);
+    ctx.fill();
+
+    // Sign border
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Sign text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText(murry.belly >= 50 ? '🚽 GO NOW!' : '🚽 RELIEF', x + 30, y - 10);
+
+    if (murry.belly >= 50) {
+        if (isUrgent) {
+            ctx.fillText('⚠️ EMERGENCY ⚠️', x + 30, signY - 2 + signPulse);
+            ctx.font = 'bold 9px Arial';
+            ctx.fillText('CODE BROWN!', x + 30, signY + 9 + signPulse);
+        } else {
+            ctx.fillText('🚽 GO NOW! 🚽', x + 30, signY - 2 + signPulse);
+            ctx.font = '9px Arial';
+            ctx.fillText('Belly: ' + Math.floor(murry.belly) + '%', x + 30, signY + 9 + signPulse);
+        }
+    } else {
+        ctx.fillText('🚽 RESTROOM', x + 30, signY - 2);
+        ctx.font = '9px Arial';
+        ctx.fillStyle = '#d1d5db';
+        ctx.fillText('Relief Station', x + 30, signY + 9);
+    }
+
+    // === STINK LINES WHEN POOPING ===
+    if (isPooping) {
+        ctx.strokeStyle = 'rgba(101, 163, 13, 0.5)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 3; i++) {
+            const waveOffset = Math.sin(gameTime * 0.1 + i) * 5;
+            ctx.beginPath();
+            ctx.moveTo(x + 15 + i * 15, y + 20);
+            ctx.quadraticCurveTo(x + 15 + i * 15 + waveOffset, y + 5, x + 15 + i * 15, y - 10);
+            ctx.stroke();
+        }
+    }
+
+    ctx.restore();
 }
 
 function drawFood(food) {
