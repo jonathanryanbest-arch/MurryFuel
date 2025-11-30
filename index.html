@@ -186,65 +186,67 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 10px;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+            padding: 15px 20px;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom, 0px));
             z-index: 50;
-            background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 70%, transparent 100%);
         }
         .control-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 0 10px;
         }
         .dpad {
             display: flex;
-            gap: 12px;
+            gap: 15px;
         }
         .dpad-btn {
-            width: 70px;
-            height: 70px;
-            background: rgba(229, 22, 54, 0.85);
-            border: 3px solid #ffffff;
-            border-radius: 15px;
+            width: 80px;
+            height: 80px;
+            background: rgba(229, 22, 54, 0.9);
+            border: 4px solid #ffffff;
+            border-radius: 18px;
             color: white;
-            font-size: 28px;
+            font-size: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.08s, background 0.08s;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+            transition: transform 0.05s, box-shadow 0.05s;
+            will-change: transform;
         }
         .dpad-btn:active, .dpad-btn.active {
             background: #e51636;
-            transform: scale(0.92);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            transform: scale(0.88) translateY(2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.1);
         }
         #jumpBtn {
-            width: 90px;
-            height: 90px;
-            background: rgba(229, 22, 54, 0.85);
-            border: 3px solid #ffffff;
+            width: 100px;
+            height: 100px;
+            background: rgba(229, 22, 54, 0.9);
+            border: 4px solid #ffffff;
             border-radius: 50%;
             color: white;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
             display: flex;
             justify-content: center;
             align-items: center;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.35);
-            transition: transform 0.08s, background 0.08s;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.45), inset 0 2px 0 rgba(255,255,255,0.2);
+            transition: transform 0.05s, box-shadow 0.05s;
+            will-change: transform;
         }
         #jumpBtn:active, #jumpBtn.active {
             background: #e51636;
-            transform: scale(0.92);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            transform: scale(0.88) translateY(2px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.1);
         }
 
         /* Mobile detection and layout */
@@ -252,41 +254,111 @@
             #mobileControls { display: block; }
             #instructions { display: none; }
             #gameContainer {
-                padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+                padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
             }
             body {
                 padding-top: env(safe-area-inset-top, 0px);
+                padding-left: env(safe-area-inset-left, 0px);
+                padding-right: env(safe-area-inset-right, 0px);
             }
+            h1 { font-size: clamp(1em, 4vw, 1.8em); }
+            .subtitle { font-size: clamp(0.55em, 2vw, 0.75em); }
         }
 
-        /* Small phones */
+        /* Small phones (iPhone SE, etc) */
         @media (max-width: 380px) {
-            .dpad-btn { width: 55px; height: 55px; font-size: 22px; }
-            #jumpBtn { width: 70px; height: 70px; font-size: 13px; }
-            .dpad { gap: 8px; }
+            .dpad-btn { width: 65px; height: 65px; font-size: 26px; border-width: 3px; }
+            #jumpBtn { width: 80px; height: 80px; font-size: 14px; border-width: 3px; }
+            .dpad { gap: 10px; }
+            #mobileControls { padding: 10px 15px; }
         }
 
-        /* Landscape mode */
+        /* Medium phones */
+        @media (min-width: 381px) and (max-width: 428px) {
+            .dpad-btn { width: 75px; height: 75px; font-size: 30px; }
+            #jumpBtn { width: 95px; height: 95px; font-size: 15px; }
+        }
+
+        /* Larger phones (iPhone Pro Max, etc) */
+        @media (min-width: 429px) and (hover: none) {
+            .dpad-btn { width: 85px; height: 85px; font-size: 34px; }
+            #jumpBtn { width: 110px; height: 110px; font-size: 17px; }
+            .dpad { gap: 18px; }
+        }
+
+        /* Landscape mode - controls on sides */
         @media (max-height: 500px) and (orientation: landscape) {
-            h1 { font-size: 1.1em; margin-bottom: 2px; }
+            h1 { font-size: 1em; margin-bottom: 0; }
             .subtitle { display: none; }
-            #hud { padding: 4px 8px; gap: 4px; }
-            .meter-container { width: 55px; height: 12px; }
-            #mobileControls {
-                padding: 5px;
-                padding-bottom: calc(5px + env(safe-area-inset-bottom, 0px));
+            #hud {
+                padding: 4px 10px;
+                gap: 6px;
+                font-size: 0.85em;
             }
-            .dpad-btn { width: 50px; height: 50px; font-size: 20px; }
-            #jumpBtn { width: 70px; height: 70px; font-size: 12px; }
+            .meter-container { width: 60px; height: 14px; }
             #gameContainer {
-                padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+                padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+                padding-left: env(safe-area-inset-left, 10px);
+                padding-right: env(safe-area-inset-right, 10px);
             }
+            #mobileControls {
+                padding: 8px 15px;
+                padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+            }
+            .control-row {
+                max-width: 100%;
+                padding: 0 5%;
+            }
+            .dpad-btn { width: 55px; height: 55px; font-size: 24px; border-width: 3px; }
+            #jumpBtn { width: 70px; height: 70px; font-size: 13px; border-width: 3px; }
+            .dpad { gap: 10px; }
+        }
+
+        /* Very short landscape (notched phones) */
+        @media (max-height: 400px) and (orientation: landscape) {
+            h1 { display: none; }
+            #hud { padding: 3px 8px; margin-bottom: 3px; }
+            .meter-container { width: 50px; height: 12px; }
+            #gameContainer { padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+            .dpad-btn { width: 50px; height: 50px; font-size: 20px; }
+            #jumpBtn { width: 60px; height: 60px; font-size: 11px; }
         }
 
         /* Prevent text selection and callouts */
         * {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Orientation lock suggestion */
+        #orientationMsg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+            padding: 20px;
+        }
+        #orientationMsg .rotate-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: rotate-hint 2s ease-in-out infinite;
+        }
+        @keyframes rotate-hint {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
         }
     </style>
 </head>
@@ -329,11 +401,20 @@
     <div id="mobileControls">
         <div class="control-row">
             <div class="dpad">
-                <div class="dpad-btn" id="leftBtn">⬅️</div>
-                <div class="dpad-btn" id="rightBtn">➡️</div>
+                <div class="dpad-btn" id="leftBtn">◀</div>
+                <div class="dpad-btn" id="rightBtn">▶</div>
             </div>
-            <div id="jumpBtn">JUMP</div>
+            <div id="jumpBtn">JUMP<br>⬆</div>
         </div>
+    </div>
+
+    <!-- iOS Add to Home Screen Banner -->
+    <div id="installBanner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:linear-gradient(180deg, #e51636, #a01128); color:white; padding:12px 15px; z-index:1000; text-align:center; font-size:14px; box-shadow:0 -4px 20px rgba(0,0,0,0.3);">
+        <div style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
+            <span>📱 Add to Home Screen for the best experience!</span>
+            <button onclick="document.getElementById('installBanner').style.display='none'; localStorage.setItem('installDismissed','1');" style="background:white; color:#e51636; border:none; padding:6px 12px; border-radius:15px; font-weight:bold; font-size:12px;">Got it</button>
+        </div>
+        <div style="font-size:11px; margin-top:6px; opacity:0.9;">Tap <span style="border:1px solid white; padding:1px 4px; border-radius:3px;">⬆</span> then "Add to Home Screen"</div>
     </div>
 
 <script>
@@ -831,35 +912,102 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('keyup', e => { keys[e.code] = false; });
 
+// Haptic feedback helper
+function vibrate(pattern) {
+    if ('vibrate' in navigator) {
+        try {
+            navigator.vibrate(pattern);
+        } catch(e) {}
+    }
+}
+
 function setupMobileControls() {
     const leftBtn = document.getElementById('leftBtn');
     const rightBtn = document.getElementById('rightBtn');
     const jumpBtn = document.getElementById('jumpBtn');
 
-    function addTouchEvents(element, keyCode) {
+    function addTouchEvents(element, keyCode, isJump = false) {
+        let touchId = null;
+
         element.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            e.stopPropagation();
+
+            // Track this touch
+            if (e.touches.length > 0) {
+                touchId = e.touches[0].identifier;
+            }
+
             keys[keyCode] = true;
             element.classList.add('active');
             initAudio();
+
+            // Haptic feedback - stronger for jump
+            vibrate(isJump ? [15, 30, 15] : 10);
         }, { passive: false });
+
         element.addEventListener('touchend', (e) => {
             e.preventDefault();
             keys[keyCode] = false;
             element.classList.remove('active');
+            touchId = null;
         }, { passive: false });
+
         element.addEventListener('touchcancel', () => {
             keys[keyCode] = false;
             element.classList.remove('active');
+            touchId = null;
         });
+
+        // Handle touch leaving the button
+        element.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            // Check if touch is still on button
+            const touch = Array.from(e.touches).find(t => t.identifier === touchId);
+            if (touch) {
+                const rect = element.getBoundingClientRect();
+                const isInside = (
+                    touch.clientX >= rect.left &&
+                    touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top &&
+                    touch.clientY <= rect.bottom
+                );
+                if (!isInside) {
+                    keys[keyCode] = false;
+                    element.classList.remove('active');
+                }
+            }
+        }, { passive: false });
     }
 
     addTouchEvents(leftBtn, 'ArrowLeft');
     addTouchEvents(rightBtn, 'ArrowRight');
-    addTouchEvents(jumpBtn, 'Space');
+    addTouchEvents(jumpBtn, 'Space', true);
+
+    // Prevent zoom on double-tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, { passive: false });
 }
 
-document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+// Prevent all scrolling and bouncing
+document.addEventListener('touchmove', e => {
+    if (e.target.closest('#mobileControls') || e.target.closest('canvas')) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// Prevent pull-to-refresh
+document.body.addEventListener('touchmove', e => {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
 
 overlayBtn.addEventListener('click', handleOverlayClick);
 overlayBtn.addEventListener('touchend', (e) => { e.preventDefault(); handleOverlayClick(); });
@@ -986,12 +1134,14 @@ function update() {
 
             // EARTHQUAKE SHAKE
             screenShake.intensity = 35;
+            vibrate([50, 50, 100, 50, 200]); // Epic relief vibration pattern!
 
             // Sound sequence
             playSound('bigfart');
             setTimeout(() => {
                 playSound('flush');
                 screenShake.intensity = 20;
+                vibrate(100);
             }, 400);
             setTimeout(() => {
                 playSound('relief');
@@ -1025,6 +1175,7 @@ function update() {
 
         // ACCIDENT!
         if (murry.accidentTimer >= ACCIDENT_TIME) {
+            vibrate([100, 50, 100, 50, 300]); // Shame vibration
             gameOver('accident');
             return;
         }
@@ -1091,6 +1242,7 @@ function update() {
             playSound('break');
             playSound('rage');
             screenShake.intensity = 25;
+            vibrate([30, 20, 30, 20, 80]); // Angry putter-breaking vibration!
 
             // Putter pieces flying
             createParticles(putter.x + 25, putter.y + 10, ['#6b7280', '#9ca3af', '#374151'], 20, { spread: 20, vy: -6, spreadX: 8 });
@@ -1185,9 +1337,12 @@ function update() {
             score += points;
 
             playSound('eat');
+            vibrate(20); // Haptic on eat
+
             if (murry.belly > 45 && Math.random() < 0.35) {
                 setTimeout(() => {
                     playSound('burp');
+                    vibrate(30);
                     addFloatingText(murry.x + 25, murry.y - 25, "*BURRRP*", '#90EE90', 15);
                 }, 350);
             }
@@ -2502,6 +2657,47 @@ showOverlay('🐔 MURRY FUEL 🐔',
     'Murry is ADDICTED to Chick-fil-A.<br><br>🍗 Eat sandwiches & waffle fries<br>🔥 Spicy ones fill you up faster!<br>🏌️ Break putters = MURRY RAGE!<br>🚽 Get to the toilet before you EXPLODE<br>💀 Hold it too long = ACCIDENT!<br><br>How long can Murry last?',
     'EAT! MY PLEASURE!', true);
 gameLoop();
+
+// Show install banner on iOS Safari if not installed/dismissed
+(function() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const isDismissed = localStorage.getItem('installDismissed');
+    const isMobile = 'ontouchstart' in window;
+
+    if (isMobile && !isInStandaloneMode && !isDismissed) {
+        // Show banner after 3 seconds
+        setTimeout(() => {
+            const banner = document.getElementById('installBanner');
+            if (banner) {
+                banner.style.display = 'block';
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 10000);
+            }
+        }, 3000);
+    }
+})();
+
+// Keep screen awake during gameplay (where supported)
+if ('wakeLock' in navigator) {
+    let wakeLock = null;
+    async function requestWakeLock() {
+        try {
+            wakeLock = await navigator.wakeLock.request('screen');
+        } catch(e) {}
+    }
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && gameState === 'playing') {
+            requestWakeLock();
+        }
+    });
+    // Request on first interaction
+    document.addEventListener('touchstart', () => {
+        if (gameState === 'playing') requestWakeLock();
+    }, { once: true });
+}
 </script>
 </body>
 </html>
